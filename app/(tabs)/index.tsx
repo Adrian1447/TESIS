@@ -4,6 +4,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Button,
   FlatList,
@@ -14,56 +15,92 @@ import {
   Text,
   View,
 } from "react-native";
-import { BleManager, Device } from "react-native-ble-plx";
+import {
+  BleManager,
+  Device,
+  State as StateBluetooth,
+} from "react-native-ble-plx";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
-const bleManager = new BleManager();
-
-const requestPermissions = async () => {
-  if (Platform.OS === "android") {
-    const granted = await PermissionsAndroid.requestMultiple([
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-    ]);
-    return (
-      granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
-        PermissionsAndroid.RESULTS.GRANTED &&
-      granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] ===
-        PermissionsAndroid.RESULTS.GRANTED &&
-      granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] ===
-        PermissionsAndroid.RESULTS.GRANTED
-    );
-  } else if (Platform.OS === "ios") {
-    const status = await check(PERMISSIONS.IOS.BLUETOOTH);
-    if (status !== RESULTS.GRANTED) {
-      const result = await request(PERMISSIONS.IOS.BLUETOOTH);
-      return result === RESULTS.GRANTED;
-    }
+const requestBluetoothPermission = async () => {
+  if (Platform.OS === "ios") {
     return true;
   }
-  return true;
+  if (
+    Platform.OS === "android" &&
+    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+  ) {
+    const apiLevel = parseInt(Platform.Version.toString(), 10);
+
+    if (apiLevel < 31) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    if (
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN &&
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+    ) {
+      const result = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      ]);
+
+      return (
+        result["android.permission.BLUETOOTH_CONNECT"] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        result["android.permission.BLUETOOTH_SCAN"] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        result["android.permission.ACCESS_FINE_LOCATION"] ===
+          PermissionsAndroid.RESULTS.GRANTED
+      );
+    }
+  }
+  // this.showErrorToast("Permission have not been granted");
+
+  return false;
 };
 
 export default function HomeScreen() {
+  const [bleManager] = useState(new BleManager());
+  const [statusBleManager, setStatusBleManager] = useState<
+    "idle" | "pending" | "success" | "error"
+  >("idle");
+  const [bluetoothState, setBluetoothState] = useState<StateBluetooth | null>(
+    null
+  );
   const [devices, setDevices] = useState<Device[]>([]);
   const [isScanning, setIsScanning] = useState(false);
 
-  useEffect(() => {
-    const checkPermissions = async () => {
+  useEffect(function checkPermissions() {
+    (async () => {
       if (Platform.OS === "ios") {
         const status = await check(PERMISSIONS.IOS.BLUETOOTH);
         if (status !== RESULTS.GRANTED) {
           await request(PERMISSIONS.IOS.BLUETOOTH);
         }
       }
-    };
-
-    checkPermissions();
+    })();
   }, []);
 
+  useEffect(
+    function firstLoadingLibraryBleManager() {
+      const subscription = bleManager.onStateChange((stateBluetooth) => {
+        setStatusBleManager("success");
+        setBluetoothState(stateBluetooth);
+      }, true);
+      return () => {
+        subscription.remove();
+        bleManager.destroy();
+      };
+    },
+    [bleManager]
+  );
+
   const startScan = async () => {
-    const permission = await requestPermissions();
+    const permission = await requestBluetoothPermission();
     if (permission) {
       bleManager
         .state()
@@ -71,7 +108,7 @@ export default function HomeScreen() {
           if (state !== "PoweredOn") {
             Alert.alert(
               "Bluetooth Error",
-              "Please enable Bluetooth to scan for devices."
+              "Activa el Bluetooth primero pz sano"
             );
             return;
           }
@@ -123,29 +160,52 @@ export default function HomeScreen() {
         />
       }
     >
-      <Button
-        title={isScanning ? "Stop Scanning..." : "Start Scanning***"}
-        color={isScanning ? "blue" : "green"}
-        onPress={isScanning ? stopScan : startScan}
-      />
-      <FlatList
-        data={devices}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={{ padding: 10 }}>
-            <Text>ID: {item.id}</Text>
-            <Text>Name: {item.name || "N/A"}</Text>
-            <Text>RSSI: {item.rssi}</Text>
-            <Text>serviceData: {item.serviceData?.txPowerLevel}</Text>
-            <Text>
-              readDescriptorForService:{" "}
-              {item.readDescriptorForService.toString()}
-            </Text>
-            <Text>LocalName: {item.localName}</Text>
-            <Text>isConnectable: {item.isConnectable}</Text>
-          </View>
-        )}
-      />
+      {statusBleManager === "pending" ||
+        (statusBleManager === "idle" && (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ))}
+
+      {statusBleManager === "success" && (
+        <>
+          {bluetoothState === StateBluetooth.PoweredOn ? (
+            <Text>Bluetooth is ON</Text>
+          ) : bluetoothState === StateBluetooth.PoweredOff ? (
+            <Text>Bluetooth is OFF</Text>
+          ) : (
+            <Text>Bluetooth State: {bluetoothState}</Text>
+          )}
+        </>
+      )}
+
+      {bluetoothState === StateBluetooth.PoweredOn && (
+        <>
+          <Button
+            title={isScanning ? "Stop Scanning..." : "Start Scanning***"}
+            color={isScanning ? "blue" : "green"}
+            onPress={isScanning ? stopScan : startScan}
+          />
+          <FlatList
+            showsHorizontalScrollIndicator
+            showsVerticalScrollIndicator
+            horizontal
+            data={devices}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View style={{ padding: 10 }}>
+                <Text>ID: {item.id}</Text>
+                <Text>Name: {item.name || "N/A"}</Text>
+                <Text>RSSI: {item.rssi}</Text>
+                <Text>UUIDs: {item.serviceUUIDs?.[0]}</Text>
+                <Text>serviceData: {item.serviceData?.txPowerLevel}</Text>
+                <Text>serviceUUIDs: {item.serviceUUIDs}</Text>
+                <Text>LocalName: {item.localName}</Text>
+                <Text>isConnectable: {item.isConnectable}</Text>
+              </View>
+            )}
+          />
+        </>
+      )}
+
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
