@@ -11,6 +11,7 @@ import {
   Image,
   PermissionsAndroid,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -233,7 +234,12 @@ export default function HomeScreen() {
                 <Text>
                   IsConnectable: {item.isConnectable ? "true" : "false"}
                 </Text>
-                <Button title="Connect" onPress={() => connectToDevice(item)} />
+                <Pressable style={{ width: 100, height: 50 }}>
+                  <Button
+                    title="Connect"
+                    onPress={() => connectToDevice(item)}
+                  />
+                </Pressable>
               </View>
             )}
           />
