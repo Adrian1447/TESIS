@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+/*import { Image, StyleSheet, Platform } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -68,3 +68,91 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
 });
+ */
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  Button,
+  FlatList,
+  StyleSheet
+} from 'react-native';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+
+const Tesis = () => {
+  const [devices, setDevices] = useState<(BluetoothSerial.AndroidBluetoothDevice | BluetoothSerial.iOSBluetoothDevice)[]>([]);
+  const [connected, setConnected] = useState(false);
+  const [data, setData] = useState<string>('');
+
+  useEffect(() => {
+    const enableBluetooth = async () => {
+      try {
+        await BluetoothSerial.requestEnable();
+        const availableDevices = await BluetoothSerial.list();
+        setDevices(availableDevices);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    enableBluetooth();
+  }, []);
+
+  const connectToDevice = async (device: BluetoothSerial.AndroidBluetoothDevice | BluetoothSerial.iOSBluetoothDevice) => {
+    try {
+      await BluetoothSerial.connect(device.id);
+      setConnected(true);
+      BluetoothSerial.readEvery(
+        async (data, interval) => setData(data),
+        1000 // Read data every second
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Bluetooth Devices</Text>
+      <FlatList
+        data={devices as BluetoothSerial.AndroidBluetoothDevice[]}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Button
+            title={item.name}
+            onPress={() => connectToDevice(item)}
+          />
+        )}
+      />
+      {connected && (
+        <View style={styles.dataContainer}>
+          <Text style={styles.data}>{data}</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF'
+  },
+  header: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10
+  },
+  dataContainer: {
+    marginTop: 20
+  },
+  data: {
+    fontSize: 18,
+    color: 'blue'
+  }
+});
+
+export default Tesis;
+
