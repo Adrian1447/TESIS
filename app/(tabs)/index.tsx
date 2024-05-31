@@ -14,14 +14,19 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  ToastAndroid,
   View,
 } from "react-native";
 import {
   BleError,
   BleManager,
-  Device,
+  Device as DeviceBLE,
   State as StateBluetooth,
 } from "react-native-ble-plx";
+import RNBluetoothClassic, {
+  BluetoothDevice,
+  BluetoothDeviceReadEvent,
+} from "react-native-bluetooth-classic";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
 const requestBluetoothPermission = async () => {
@@ -66,6 +71,7 @@ const requestBluetoothPermission = async () => {
 };
 
 export default function HomeScreen() {
+  //#region Bluetooth BLE
   const [bleManager] = useState(new BleManager());
   const [statusBleManager, setStatusBleManager] = useState<
     "idle" | "pending" | "success" | "error"
@@ -73,10 +79,19 @@ export default function HomeScreen() {
   const [bluetoothState, setBluetoothState] = useState<StateBluetooth | null>(
     null
   );
-  const [devices, setDevices] = useState<Device[]>([]);
-  const [isScanning, setIsScanning] = useState<boolean>(false);
-  const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
-  console.log(devices);
+  const [devicesBLE, setDevicesBLE] = useState<DeviceBLE[]>([]);
+  const [isScanningBLE, setIsScanningBLE] = useState<boolean>(false);
+  const [connectedDeviceBLE, setConnectedDeviceBLE] =
+    useState<DeviceBLE | null>(null);
+
+  //#region Bluetooth BLC
+  const [isScanningBLC, setIsScanningBLC] = useState<boolean>(false);
+  const [devicesBLC, setDevicesBLC] = useState<BluetoothDevice[]>([]);
+  const [isBluetoothEnabledBLC, setIsBluetoothEnabledBLC] =
+    useState<boolean>(false);
+  const [data, setData] = useState<any>([]);
+  console.log("Data");
+  console.log(data);
 
   useEffect(function checkPermissions() {
     (async () => {
@@ -89,6 +104,85 @@ export default function HomeScreen() {
     })();
   }, []);
 
+  //region Bluetooth Classic Functions
+  const onReceivedData = (event: BluetoothDeviceReadEvent) => {
+    setData({
+      ...event,
+      timestamp: new Date(), // Add the current date
+      type: "receive", // Add a type for UI
+    });
+  };
+
+  const startScanBLC = async () => {
+    try {
+      const granted = await requestBluetoothPermission();
+      if (!granted) {
+        throw new Error("Access fine location was not granted");
+      }
+      setIsScanningBLC(true);
+      try {
+        const unpairedDevices = await RNBluetoothClassic.startDiscovery();
+        ToastAndroid.show(
+          `Encontrados ${unpairedDevices.length} dispositivos no emparejados.`,
+          ToastAndroid.SHORT
+        );
+        setDevicesBLC(unpairedDevices);
+      } finally {
+        setIsScanningBLC(false);
+      }
+    } catch (err) {
+      ToastAndroid.show("Error", ToastAndroid.SHORT);
+    }
+  };
+
+  async function stopScanBLC() {
+    try {
+      await RNBluetoothClassic.cancelDiscovery();
+      setIsScanningBLC(false);
+    } catch (e) {
+      ToastAndroid.show(
+        `Se produjo un error al intentar cancelar la detección de dispositivos`,
+        2000
+      );
+    }
+  }
+
+  const connectToDeviceBLC = async (device: BluetoothDevice) => {
+    try {
+      stopScanBLC();
+      console.log("Connecting to device1");
+      console.log(device);
+      console.log("Connecting to device2");
+      let isConnected = await device.isConnected();
+      console.log("Connected to device---");
+      console.log(isConnected);
+      if (!isConnected) {
+        ToastAndroid.show(
+          `Intentando conectar al dispositivo ${device.name}...`,
+          5000
+        );
+        isConnected = await device.connect();
+        console.log("Connecting to device3");
+        const connectedDevice = await device.connect();
+        console.log(connectedDevice);
+        device.onDataReceived(onReceivedData);
+        Alert.alert(`Connected to ${device.name}`);
+      }
+    } catch (e) {
+      console.error(e);
+      Alert.alert("Error", e?.toString());
+    }
+  };
+
+  useEffect(function firstLoadingLibraryBlC() {
+    (async () => {
+      // RNBluetoothClassic.();
+      const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+      setIsBluetoothEnabledBLC(isBluetoothEnabled);
+    })();
+  });
+
+  //region Bluetooth BLE Functions
   useEffect(
     function firstLoadingLibraryBleManager() {
       const subscription = bleManager.onStateChange((stateBluetooth) => {
@@ -103,7 +197,7 @@ export default function HomeScreen() {
     [bleManager]
   );
 
-  const startScan = async () => {
+  const startScanBLE = async () => {
     const permission = await requestBluetoothPermission();
     if (permission) {
       bleManager
@@ -116,19 +210,19 @@ export default function HomeScreen() {
             );
             return;
           }
-          setIsScanning(true);
-          setDevices([]);
+          setIsScanningBLE(true);
+          setDevicesBLE([]);
           bleManager.startDeviceScan(null, null, (error, device) => {
             if (error) {
               console.error(
                 `Error during scan: ${error.message}, Reason: ${error.reason}`
               );
               Alert.alert("Scan Error", `Error: ${error.message}`);
-              setIsScanning(false);
+              setIsScanningBLE(false);
               return;
             }
             if (device) {
-              setDevices((prevDevices) => {
+              setDevicesBLE((prevDevices) => {
                 if (!prevDevices.find((d) => d.id === device.id)) {
                   return [...prevDevices, device];
                 }
@@ -143,19 +237,19 @@ export default function HomeScreen() {
     } else {
       Alert.alert(
         "Permission Error",
-        "Location and Bluetooth permissions are required to scan for devices."
+        "Location and Bluetooth permissions are required to scan for devicesBLE."
       );
     }
   };
 
-  const stopScan = () => {
+  const stopScanBLE = () => {
     bleManager.stopDeviceScan();
-    setIsScanning(false);
+    setIsScanningBLE(false);
   };
 
-  const connectToDevice = async (device: Device) => {
+  const connectToDeviceBLE = async (device: DeviceBLE) => {
     try {
-      stopScan();
+      stopScanBLE();
       // Verificar si el dispositivo ya está conectado
       const connectedDevices = await bleManager.connectedDevices([device.id]);
       if (connectedDevices.length > 0) {
@@ -164,8 +258,8 @@ export default function HomeScreen() {
       }
 
       // Intentar conectar al dispositivo
-      const connectedDevice = await device.connect();
-      setConnectedDevice(connectedDevice);
+      const connectedDeviceBLE = await device.connect();
+      setConnectedDeviceBLE(connectedDeviceBLE);
       Alert.alert("Connected to device");
     } catch (error) {
       if (error instanceof BleError) {
@@ -188,68 +282,127 @@ export default function HomeScreen() {
         />
       }
     >
-      {statusBleManager === "pending" ||
-        (statusBleManager === "idle" && (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ))}
+      <ThemedView
+        style={{
+          borderWidth: 2,
+          borderColor: "green",
+          borderRadius: 10,
+          padding: 20,
+        }}
+      >
+        <ThemedText type="title">Bluetooht BLE</ThemedText>
 
-      {statusBleManager === "success" && (
-        <>
-          {bluetoothState === StateBluetooth.PoweredOn ? (
-            <Text>Bluetooth is ON</Text>
-          ) : bluetoothState === StateBluetooth.PoweredOff ? (
-            <Text>Bluetooth is OFF</Text>
-          ) : (
-            <Text>Bluetooth State: {bluetoothState}</Text>
-          )}
-        </>
-      )}
+        {statusBleManager === "pending" ||
+          (statusBleManager === "idle" && (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ))}
 
-      {bluetoothState === StateBluetooth.PoweredOn && (
-        <>
-          <Text>
-            Cuando el dispositivo está conectado, no transmitirá y debe
-            desconectarse de la central para volver a escanear. Solo se puede
-            registrar un agente de escucha de exploración.
-          </Text>
-          <Button
-            title={isScanning ? "Stop Scanning..." : "Start Scanning***"}
-            color={isScanning ? "blue" : "green"}
-            onPress={isScanning ? stopScan : startScan}
-          />
-          {connectedDevice && <Text>Connected to: {connectedDevice.name}</Text>}
-          <FlatList
-            showsHorizontalScrollIndicator
-            showsVerticalScrollIndicator
-            horizontal
-            data={devices}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={{ padding: 10 }}>
-                <Text>ID: {item.id}</Text>
-                <Text>Name: {item.name || "N/A"}</Text>
-                <Text>RSSI: {item.rssi}</Text>
-                <Text>LocalName: {item.localName}</Text>
-                <Text>ManufacturerData: {item.manufacturerData}</Text>
-                <Text>
-                  IsConnectable:{" "}
-                  {item.isConnectable ? (
-                    <Text style={{ color: "green" }}>Yes</Text>
-                  ) : (
-                    <Text style={{ color: "red" }}>No</Text>
-                  )}
-                </Text>
-                <Pressable style={{ width: 100, height: 50 }}>
-                  <Button
-                    title="Connect"
-                    onPress={() => connectToDevice(item)}
-                  />
-                </Pressable>
-              </View>
+        {statusBleManager === "success" && (
+          <>
+            {bluetoothState === StateBluetooth.PoweredOn ? (
+              <Text>Bluetooth is ON</Text>
+            ) : bluetoothState === StateBluetooth.PoweredOff ? (
+              <Text>Bluetooth is OFF</Text>
+            ) : (
+              <Text>Bluetooth State: {bluetoothState}</Text>
             )}
-          />
-        </>
-      )}
+          </>
+        )}
+
+        {bluetoothState === StateBluetooth.PoweredOn && (
+          <>
+            <Text>
+              Cuando el dispositivo está conectado, no transmitirá y debe
+              desconectarse de la central para volver a escanear. Solo se puede
+              registrar un agente de escucha de exploración.
+            </Text>
+            <Button
+              title={isScanningBLE ? "Stop Scanning..." : "Start Scanning***"}
+              color={isScanningBLE ? "blue" : "green"}
+              onPress={isScanningBLE ? stopScanBLE : startScanBLE}
+            />
+            {connectedDeviceBLE && (
+              <Text>Connected to: {connectedDeviceBLE.name}</Text>
+            )}
+            <FlatList
+              showsHorizontalScrollIndicator
+              showsVerticalScrollIndicator
+              horizontal
+              data={devicesBLE}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={{ padding: 10 }}>
+                  <Text>ID: {item.id}</Text>
+                  <Text>Name: {item.name || "N/A"}</Text>
+                  <Text>RSSI: {item.rssi}</Text>
+                  <Text>LocalName: {item.localName}</Text>
+                  <Text>ManufacturerData: {item.manufacturerData}</Text>
+                  <Text>
+                    IsConnectable:{" "}
+                    {item.isConnectable ? (
+                      <Text style={{ color: "green" }}>Yes</Text>
+                    ) : (
+                      <Text style={{ color: "red" }}>No</Text>
+                    )}
+                  </Text>
+                  <Pressable style={{ width: 100, height: 50 }}>
+                    <Button
+                      title="Connect"
+                      onPress={() => connectToDeviceBLE(item)}
+                    />
+                  </Pressable>
+                </View>
+              )}
+            />
+          </>
+        )}
+      </ThemedView>
+
+      <ThemedView
+        style={{
+          borderWidth: 2,
+          borderColor: "green",
+          borderRadius: 10,
+          padding: 20,
+        }}
+      >
+        <ThemedText type="title">Bluetooht BLC</ThemedText>
+        {isBluetoothEnabledBLC ? (
+          <Text>Bluetooth is ON</Text>
+        ) : (
+          <Text>Bluetooth is OFF</Text>
+        )}
+        {isBluetoothEnabledBLC && (
+          <>
+            <Text>Bluetooth devicesBLClasic:</Text>
+            <Button
+              title={isScanningBLC ? "Stop Scanning..." : "Start Scanning***"}
+              color={isScanningBLC ? "blue" : "green"}
+              onPress={isScanningBLC ? stopScanBLC : startScanBLC}
+            />
+            <FlatList
+              showsHorizontalScrollIndicator
+              showsVerticalScrollIndicator
+              horizontal
+              data={devicesBLC}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={{ padding: 10 }}>
+                  <Text>ID: {item.id}</Text>
+                  <Text>Name: {item.name || "N/A"}</Text>
+                  <Text>address: {item.address}</Text>
+                  <Pressable style={{ width: 100, height: 50 }}>
+                    <Button
+                      title="Connect"
+                      onPress={() => connectToDeviceBLC(item)}
+                    />
+                  </Pressable>
+                </View>
+              )}
+            />
+          </>
+        )}
+      </ThemedView>
 
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
