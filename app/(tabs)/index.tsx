@@ -14,7 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { BleManager } from "react-native-ble-plx";
+import { BleManager, Device } from "react-native-ble-plx";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
 const bleManager = new BleManager();
@@ -46,7 +46,7 @@ const requestPermissions = async () => {
 };
 
 export default function HomeScreen() {
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState<Device[]>([]);
   const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
@@ -88,8 +88,8 @@ export default function HomeScreen() {
               return;
             }
             if (device) {
-              setDevices((prevDevices: any) => {
-                if (!prevDevices.find((d: any) => d.id === device.id)) {
+              setDevices((prevDevices) => {
+                if (!prevDevices.find((d) => d.id === device.id)) {
                   return [...prevDevices, device];
                 }
                 return prevDevices;
@@ -130,12 +130,19 @@ export default function HomeScreen() {
       />
       <FlatList
         data={devices}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={{ padding: 10 }}>
             <Text>ID: {item.id}</Text>
             <Text>Name: {item.name || "N/A"}</Text>
             <Text>RSSI: {item.rssi}</Text>
+            <Text>serviceData: {item.serviceData?.txPowerLevel}</Text>
+            <Text>
+              readDescriptorForService:{" "}
+              {item.readDescriptorForService.toString()}
+            </Text>
+            <Text>LocalName: {item.localName}</Text>
+            <Text>isConnectable: {item.isConnectable}</Text>
           </View>
         )}
       />
