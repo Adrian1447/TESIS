@@ -16,6 +16,7 @@ import {
   View,
 } from "react-native";
 import {
+  BleError,
   BleManager,
   Device,
   State as StateBluetooth,
@@ -72,7 +73,9 @@ export default function HomeScreen() {
     null
   );
   const [devices, setDevices] = useState<Device[]>([]);
-  const [isScanning, setIsScanning] = useState(false);
+  const [isScanning, setIsScanning] = useState<boolean>(false);
+  const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
+  console.log(devices);
 
   useEffect(function checkPermissions() {
     (async () => {
@@ -112,7 +115,6 @@ export default function HomeScreen() {
             );
             return;
           }
-
           setIsScanning(true);
           setDevices([]);
           bleManager.startDeviceScan(null, null, (error, device) => {
@@ -150,6 +152,31 @@ export default function HomeScreen() {
     setIsScanning(false);
   };
 
+  const connectToDevice = async (device: Device) => {
+    try {
+      stopScan();
+      // Verificar si el dispositivo ya está conectado
+      const connectedDevices = await bleManager.connectedDevices([device.id]);
+      if (connectedDevices.length > 0) {
+        Alert.alert("Device is already connected");
+        return;
+      }
+
+      // Intentar conectar al dispositivo
+      const connectedDevice = await device.connect();
+      setConnectedDevice(connectedDevice);
+      Alert.alert("Connected to device");
+    } catch (error) {
+      if (error instanceof BleError) {
+        console.error("BLE Error:", error.message);
+        Alert.alert("BLE Error:", error.message);
+      } else {
+        console.error("Error:", error);
+        Alert.alert("Error:", error?.toString());
+      }
+    }
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -179,11 +206,17 @@ export default function HomeScreen() {
 
       {bluetoothState === StateBluetooth.PoweredOn && (
         <>
+          <Text>
+            Cuando el dispositivo está conectado, no transmitirá y debe
+            desconectarse de la central para volver a escanear. Solo se puede
+            registrar un agente de escucha de exploración.
+          </Text>
           <Button
             title={isScanning ? "Stop Scanning..." : "Start Scanning***"}
             color={isScanning ? "blue" : "green"}
             onPress={isScanning ? stopScan : startScan}
           />
+          {connectedDevice && <Text>Connected to: {connectedDevice.name}</Text>}
           <FlatList
             showsHorizontalScrollIndicator
             showsVerticalScrollIndicator
@@ -195,11 +228,12 @@ export default function HomeScreen() {
                 <Text>ID: {item.id}</Text>
                 <Text>Name: {item.name || "N/A"}</Text>
                 <Text>RSSI: {item.rssi}</Text>
-                <Text>UUIDs: {item.serviceUUIDs?.[0]}</Text>
-                <Text>serviceData: {item.serviceData?.txPowerLevel}</Text>
-                <Text>serviceUUIDs: {item.serviceUUIDs}</Text>
                 <Text>LocalName: {item.localName}</Text>
-                <Text>isConnectable: {item.isConnectable}</Text>
+                <Text>ManufacturerData: {item.manufacturerData}</Text>
+                <Text>
+                  IsConnectable: {item.isConnectable ? "true" : "false"}
+                </Text>
+                <Button title="Connect" onPress={() => connectToDevice(item)} />
               </View>
             )}
           />
