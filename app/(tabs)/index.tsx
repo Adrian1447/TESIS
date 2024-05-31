@@ -232,7 +232,12 @@ export default function HomeScreen() {
                 <Text>LocalName: {item.localName}</Text>
                 <Text>ManufacturerData: {item.manufacturerData}</Text>
                 <Text>
-                  IsConnectable: {item.isConnectable ? "true" : "false"}
+                  IsConnectable:{" "}
+                  {item.isConnectable ? (
+                    <Text style={{ color: "green" }}>Yes</Text>
+                  ) : (
+                    <Text style={{ color: "red" }}>No</Text>
+                  )}
                 </Text>
                 <Pressable style={{ width: 100, height: 50 }}>
                   <Button
