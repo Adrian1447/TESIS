@@ -104,22 +104,19 @@ export default function HomeScreen() {
   }, []);
 
   //region Bluetooth Classic Functions
-  useEffect(
-    function handleDataReceived() {
-      const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
-        console.log("Datos recibidos:", event);
-        setData(event?.data);
-      };
+  useEffect(function handleDataReceived() {
+    const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
+      console.log("Datos recibidos:", event);
+      setData(event?.data);
+    };
 
-      const subscription = device?.onDataReceived((data) =>
-        handleDataReceived(data)
-      );
-      return () => {
-        subscription?.remove();
-      };
-    },
-    [device]
-  );
+    const subscription = device?.onDataReceived((data) =>
+      handleDataReceived(data)
+    );
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
 
   const startScanBLC = async () => {
     try {
@@ -171,6 +168,7 @@ export default function HomeScreen() {
           5000
         );
         await device.connect();
+        console.log("Connecting successful");
         setDevice(device);
         Alert.alert(`Connected to ${device.name}`);
       }
