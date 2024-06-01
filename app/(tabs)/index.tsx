@@ -108,7 +108,14 @@ export default function HomeScreen() {
     console.log("initializeRead successful");
     device.onDataReceived((event) => {
       console.log("Datos recibidos:", event.data);
-      setData((prevData: any) => [...prevData, event.data]);
+      setData((prevData: any) => [
+        ...prevData,
+        event,
+        {
+          timestamp: new Date(),
+          type: "receive",
+        },
+      ]);
     });
   };
 
