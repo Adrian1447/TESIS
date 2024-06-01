@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
   //region Bluetooth Classic Functions
   const onReceivedData = (event: BluetoothDeviceReadEvent) => {
-    setData((data:any) => [
+    setData((data: any) => [
       ...data,
       {
         moreInfo: {
@@ -120,6 +120,7 @@ export default function HomeScreen() {
 
   const startScanBLC = async () => {
     try {
+      setDevicesBLC([]);
       const granted = await requestBluetoothPermission();
       if (!granted) {
         throw new Error("Access fine location was not granted");
