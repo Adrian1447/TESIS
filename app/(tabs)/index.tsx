@@ -24,8 +24,7 @@ import {
   State as StateBluetooth,
 } from "react-native-ble-plx";
 import RNBluetoothClassic, {
-  BluetoothDevice,
-  BluetoothDeviceReadEvent,
+  BluetoothDevice
 } from "react-native-bluetooth-classic";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
@@ -119,14 +118,14 @@ export default function HomeScreen() {
   //   };
   // }, []);
 
-  const onReceivedData = (event: BluetoothDeviceReadEvent) => {
-    console.log("Datos recibidos:", event);
-    setData({
-      ...event,
-      timestamp: new Date(), // Add the current date
-      type: "receive", // Add a type for UI
-    });
-  };
+  // const onReceivedData = async (event: BluetoothDeviceReadEvent) => {
+  //   console.log("Datos recibidos:", event);
+  //   setData({
+  //     ...event,
+  //     timestamp: new Date(), // Add the current date
+  //     type: "receive", // Add a type for UI
+  //   });
+  // };
 
   const startScanBLC = async () => {
     try {
@@ -179,17 +178,15 @@ export default function HomeScreen() {
         );
         await device.connect();
         console.log("Connecting successful");
-        // setDevice(device);
-        device.onDataReceived(onReceivedData);
-        // const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
-        //   console.log("Datos recibidos:", event);
-        //   setData(event?.data);
-        // };
-
-        // device.onDataReceived((data) => handleDataReceived(data));
+        // device.onDataReceived((data) => {
+        //   console.log("Datos recibidos:", data);
+        // });
         console.log("handleDataReceived successful");
         Alert.alert(`Connected to ${device.name}`);
       }
+      device.onDataReceived((data) => {
+        console.log("Datos recibidos:", data);
+      });
     } catch (e) {
       console.error(e);
       Alert.alert("Error", e?.toString());
