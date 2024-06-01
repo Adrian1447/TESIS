@@ -120,6 +120,7 @@ export default function HomeScreen() {
   // }, []);
 
   const onReceivedData = (event: BluetoothDeviceReadEvent) => {
+    console.log("Datos recibidos:", event);
     setData({
       ...event,
       timestamp: new Date(), // Add the current date
