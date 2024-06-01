@@ -175,9 +175,8 @@ export default function HomeScreen() {
           setData(event?.data);
         };
 
-        const subscription = device?.onDataReceived((data) =>
-          handleDataReceived(data)
-        );
+        device.onDataReceived((data) => handleDataReceived(data));
+        console.log("handleDataReceived successful");
         Alert.alert(`Connected to ${device.name}`);
       }
     } catch (e) {
