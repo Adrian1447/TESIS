@@ -25,6 +25,7 @@ import {
 } from "react-native-ble-plx";
 import RNBluetoothClassic, {
   BluetoothDevice,
+  BluetoothDeviceReadEvent,
 } from "react-native-bluetooth-classic";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
@@ -88,8 +89,8 @@ export default function HomeScreen() {
   const [devicesBLC, setDevicesBLC] = useState<BluetoothDevice[]>([]);
   const [isBluetoothEnabledBLC, setIsBluetoothEnabledBLC] =
     useState<boolean>(false);
-  // const [device, setDevice] = useState<BluetoothDevice>();
   const [data, setData] = useState<any>([]);
+  console.log("Data");
   console.log(data);
 
   useEffect(function checkPermissions() {
@@ -104,18 +105,11 @@ export default function HomeScreen() {
   }, []);
 
   //region Bluetooth Classic Functions
-  const initializeRead = (device: BluetoothDevice) => {
-    console.log("initializeRead successful");
-    device.onDataReceived((event) => {
-      console.log("Datos recibidos:", event.data);
-      setData((prevData: any) => [
-        ...prevData,
-        event,
-        {
-          timestamp: new Date(),
-          type: "receive",
-        },
-      ]);
+  const onReceivedData = (event: BluetoothDeviceReadEvent) => {
+    setData({
+      ...event,
+      timestamp: new Date(), // Add the current date
+      type: "receive", // Add a type for UI
     });
   };
 
@@ -168,17 +162,11 @@ export default function HomeScreen() {
           `Intentando conectar al dispositivo ${device.name}...`,
           5000
         );
-        await device.connect();
-        console.log("Connecting successful");
-        // device.onDataReceived((data) => {
-        //   console.log("Datos recibidos:", data);
-        // });
-        console.log("handleDataReceived successful");
+        const connectedDevice = await device.connect();
+        console.log(connectedDevice);
+        device.onDataReceived(onReceivedData);
         Alert.alert(`Connected to ${device.name}`);
       }
-      console.log("handleDataReceived successful1");
-      initializeRead(device);
-      console.log("handleDataReceived successful2");
     } catch (e) {
       console.error(e);
       Alert.alert("Error", e?.toString());
