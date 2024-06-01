@@ -91,6 +91,7 @@ export default function HomeScreen() {
     useState<boolean>(false);
   // const [device, setDevice] = useState<BluetoothDevice>();
   const [data, setData] = useState<any>([]);
+  console.log(data);
 
   useEffect(function checkPermissions() {
     (async () => {
@@ -117,6 +118,14 @@ export default function HomeScreen() {
   //     subscription?.remove();
   //   };
   // }, []);
+
+  const onReceivedData = (event: BluetoothDeviceReadEvent) => {
+    setData({
+      ...event,
+      timestamp: new Date(), // Add the current date
+      type: "receive", // Add a type for UI
+    });
+  };
 
   const startScanBLC = async () => {
     try {
@@ -170,12 +179,13 @@ export default function HomeScreen() {
         await device.connect();
         console.log("Connecting successful");
         // setDevice(device);
-        const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
-          console.log("Datos recibidos:", event);
-          setData(event?.data);
-        };
+        device.onDataReceived(onReceivedData);
+        // const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
+        //   console.log("Datos recibidos:", event);
+        //   setData(event?.data);
+        // };
 
-        device.onDataReceived((data) => handleDataReceived(data));
+        // device.onDataReceived((data) => handleDataReceived(data));
         console.log("handleDataReceived successful");
         Alert.alert(`Connected to ${device.name}`);
       }
