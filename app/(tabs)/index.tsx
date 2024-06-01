@@ -154,15 +154,14 @@ export default function HomeScreen() {
       console.log(device);
       console.log("Connecting to device2");
       let isConnected = await device.isConnected();
-      console.log("Connected to device---");
-      console.log(isConnected);
-      if (!isConnected) {
+      if (isConnected) {
+        Alert.alert("Device is already connected");
+        return;
+      } else {
         ToastAndroid.show(
           `Intentando conectar al dispositivo ${device.name}...`,
           5000
         );
-        isConnected = await device.connect();
-        console.log("Connecting to device3");
         const connectedDevice = await device.connect();
         console.log(connectedDevice);
         device.onDataReceived(onReceivedData);
