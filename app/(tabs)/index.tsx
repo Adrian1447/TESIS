@@ -106,11 +106,16 @@ export default function HomeScreen() {
 
   //region Bluetooth Classic Functions
   const onReceivedData = (event: BluetoothDeviceReadEvent) => {
-    setData({
-      ...event,
-      timestamp: new Date(), // Add the current date
-      type: "receive", // Add a type for UI
-    });
+    setData((data:any) => [
+      ...data,
+      {
+        moreInfo: {
+          ...event,
+          timestamp: new Date(), // Add the current date
+          type: "receive", // Add a type for UI
+        },
+      },
+    ]);
   };
 
   const startScanBLC = async () => {
@@ -165,6 +170,9 @@ export default function HomeScreen() {
         const connectedDevice = await device.connect();
         console.log(connectedDevice);
         device.onDataReceived(onReceivedData);
+        console.log("Message");
+        const message = await device.read();
+        console.log(message);
         Alert.alert(`Connected to ${device.name}`);
       }
     } catch (e) {
