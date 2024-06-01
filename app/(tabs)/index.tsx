@@ -24,7 +24,7 @@ import {
   State as StateBluetooth,
 } from "react-native-ble-plx";
 import RNBluetoothClassic, {
-  BluetoothDevice
+  BluetoothDevice,
 } from "react-native-bluetooth-classic";
 import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
@@ -104,28 +104,13 @@ export default function HomeScreen() {
   }, []);
 
   //region Bluetooth Classic Functions
-  // useEffect(function handleDataReceived() {
-  //   const handleDataReceived = async (event: BluetoothDeviceReadEvent) => {
-  //     console.log("Datos recibidos:", event);
-  //     setData(event?.data);
-  //   };
-
-  //   const subscription = device?.onDataReceived((data) =>
-  //     handleDataReceived(data)
-  //   );
-  //   return () => {
-  //     subscription?.remove();
-  //   };
-  // }, []);
-
-  // const onReceivedData = async (event: BluetoothDeviceReadEvent) => {
-  //   console.log("Datos recibidos:", event);
-  //   setData({
-  //     ...event,
-  //     timestamp: new Date(), // Add the current date
-  //     type: "receive", // Add a type for UI
-  //   });
-  // };
+  const initializeRead = (device: BluetoothDevice) => {
+    console.log("initializeRead successful");
+    device.onDataReceived((event) => {
+      console.log("Datos recibidos:", event.data);
+      setData((prevData: any) => [...prevData, event.data]);
+    });
+  };
 
   const startScanBLC = async () => {
     try {
@@ -184,9 +169,9 @@ export default function HomeScreen() {
         console.log("handleDataReceived successful");
         Alert.alert(`Connected to ${device.name}`);
       }
-      device.onDataReceived((data) => {
-        console.log("Datos recibidos:", data);
-      });
+      console.log("handleDataReceived successful1");
+      initializeRead(device);
+      console.log("handleDataReceived successful2");
     } catch (e) {
       console.error(e);
       Alert.alert("Error", e?.toString());
