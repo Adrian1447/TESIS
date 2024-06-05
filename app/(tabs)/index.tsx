@@ -5,6 +5,7 @@ import { ThemedView } from "@/components/ThemedView";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  ScrollView,
   Alert,
   Button,
   FlatList,
@@ -412,6 +413,25 @@ export default function HomeScreen() {
         )}
       </ThemedView>
 
+      <ThemedView style={styles.background}>
+        <Image
+          resizeMode="contain"
+          source={require("@/assets/images/doctor-checking-to-heartrate-monitor-4704802-3919128.jpg")}
+          style={styles.image1}
+        />
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title">
+            Medición de la Frecuencia
+            Cardiaca
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">
+          Se tomará le número máximo de palpitaciones segun tu edad y género.
+        </ThemedText>
+      </ThemedView>
+
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
@@ -454,6 +474,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
+    textAlign: "center",
     gap: 8,
   },
   stepContainer: {
@@ -467,4 +488,11 @@ const styles = StyleSheet.create({
     left: 0,
     position: "absolute",
   },
-});
+  background: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
+    color: "#FFF",
+    },
+    image1: { position: "relative", aspectRatio: "0.89" },
+  });
