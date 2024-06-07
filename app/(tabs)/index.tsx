@@ -2,6 +2,7 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import Carousel from 'react-native-reanimated-carousel';
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -17,6 +18,7 @@ import {
   Text,
   ToastAndroid,
   View,
+  Dimensions,
 } from "react-native";
 import {
   BleError,
@@ -280,7 +282,7 @@ export default function HomeScreen() {
       }
     }
   };
-
+  const width = Dimensions.get('window').width;
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -291,6 +293,28 @@ export default function HomeScreen() {
         />
       }
     >
+      <Carousel
+        loop
+        width={width}
+        height={width / 2}
+        autoPlay={true}
+        data={[...new Array(6).keys()]}
+        scrollAnimationDuration={1000}
+        onSnapToItem={(index) => console.log('current index:', index)}
+        renderItem={({ index }) => (
+          <View
+            style={{
+                flex: 1,
+                borderWidth: 1,
+                justifyContent: 'center',
+            }}
+          >
+            <Text style={{ textAlign: 'center', fontSize: 30 }}>
+                {index}
+            </Text>
+          </View>
+        )}
+      />
       <ThemedView
         style={{
           borderWidth: 2,
