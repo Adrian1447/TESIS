@@ -293,6 +293,7 @@ export default function HomeScreen() {
         />
       }
     >
+  {/* ESTE ES EL CAROUSEL*/} 
       <Carousel
         loop
         width={width}
