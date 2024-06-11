@@ -1,15 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 
-const DescriptionScreen1 = ({ navigation }: any) => {
+function DescriptionScreen1({next} : any){
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/images/doctor-checking-to-heartrate-monitor-4704802-3919128.jpg')} style={styles.image} />
       <Text style={styles.title}>Medición de la Frecuencia Cardíaca</Text>
       <Text style={styles.description}>Se tomará la máximo máximo de palpitaciones según tu edad y género.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('descriptionScreen2')}>
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
+      {/*<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('descriptionScreen2')}>
+        <Text style={styles.buttonText}>Siguiente</Text>
+      </TouchableOpacity> */}
     </View>
   );
 };

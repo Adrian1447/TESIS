@@ -1,29 +1,23 @@
-import DescriptionScreen1 from '@/app/(tabs)/descriptionScreen1';
-import DescriptionScreen2 from '@/app/(tabs)/descriptionScreen2';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { 
-    Dimensions, 
-    View,
-    Text,
     StyleSheet,
-    Image,
  } from 'react-native';
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-import DescriptionScreen3 from './(tabs)/descriptionScreen3';
-
+import Onboarding from './onBoarding';
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen() {
   return(
 <NavigationContainer independent={true}>
-      <Stack.Navigator initialRouteName="descriptionScreen1">
-        <Stack.Screen name="descriptionScreen1" component={DescriptionScreen1} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="Onboarding" screenOptions={{headerShown: false}}>
+        {/*<Stack.Screen name="descriptionScreen1" component={DescriptionScreen1} options={{ headerShown: false }} />
         <Stack.Screen name="descriptionScreen2" component={DescriptionScreen2} options={{ headerShown: false }} />
         <Stack.Screen name="descriptionScreen3" component={DescriptionScreen3} options={{ headerShown: false }} />
-        <Stack.Screen name="principal" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="principal" component={HomeScreen} options={{ headerShown: false }} />*/}
+        <Stack.Screen name="Onboarding" component={Onboarding} />
         {/* Agrega otras pantallas aquí */}
       </Stack.Navigator>
     </NavigationContainer>

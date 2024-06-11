@@ -1,15 +1,17 @@
+import { NavigationRouteContext } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
 
-const DescriptionScreen3 = ({ navigation } :any) => {
+function DescriptionScreen3({navigation} : any){
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/images/elderly-people-exercise-old-man-woman-doing-yoga_533410-1783-removebg-preview.png')} style={styles.image} />
       <Text style={styles.title}>Aplicación de Métodos de Autocuidado</Text>
       <Text style={styles.description}>Se aplicarán métodos de autocuidado para mejorar tu salud.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('principal')}>
+      {/*<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('principal')}>
         <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <Button title="Get Started" onPress={() => navigation.navigate('principal')} />
     </View>
   );
 };
