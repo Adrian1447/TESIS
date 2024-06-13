@@ -17,7 +17,7 @@ export default function HomeScreen() {
         <Stack.Screen name="descriptionScreen2" component={DescriptionScreen2} options={{ headerShown: false }} />
         <Stack.Screen name="descriptionScreen3" component={DescriptionScreen3} options={{ headerShown: false }} />
         <Stack.Screen name="principal" component={HomeScreen} options={{ headerShown: false }} />*/}
-        <Stack.Screen name="Onboarding" component={Onboarding} />
+        <Stack.Screen name="Onboarding" component={Onboarding} options={{headerShown: false}}/>
         {/* Agrega otras pantallas aquí */}
       </Stack.Navigator>
     </NavigationContainer>

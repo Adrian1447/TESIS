@@ -1,8 +1,10 @@
 import { NavigationRouteContext } from '@react-navigation/native';
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-function DescriptionScreen3({navigation} : any){
+function DescriptionScreen3(){
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/images/elderly-people-exercise-old-man-woman-doing-yoga_533410-1783-removebg-preview.png')} style={styles.image} />
