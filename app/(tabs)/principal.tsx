@@ -2,11 +2,9 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import Carousel from 'react-native-reanimated-carousel';
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  ScrollView,
   Alert,
   Button,
   FlatList,
@@ -73,7 +71,7 @@ const requestBluetoothPermission = async () => {
   return false;
 };
 
-export default function HomeScreen() {
+export default function PrincipalScreen() {
   //#region Bluetooth BLE
   const [bleManager] = useState(new BleManager());
   const [statusBleManager, setStatusBleManager] = useState<
@@ -293,29 +291,6 @@ export default function HomeScreen() {
         />
       }
     >
-  {/* ESTE ES EL CAROUSEL*/} 
-      <Carousel
-        loop
-        width={width}
-        height={width / 2}
-        autoPlay={true}
-        data={[...new Array(6).keys()]}
-        scrollAnimationDuration={1000}
-        onSnapToItem={(index) => console.log('current index:', index)}
-        renderItem={({ index }) => (
-          <View
-            style={{
-                flex: 1,
-                borderWidth: 1,
-                justifyContent: 'center',
-            }}
-          >
-            <Text style={{ textAlign: 'center', fontSize: 30 }}>
-                {index}
-            </Text>
-          </View>
-        )}
-      />
       <ThemedView
         style={{
           borderWidth: 2,
@@ -436,25 +411,6 @@ export default function HomeScreen() {
             />
           </>
         )}
-      </ThemedView>
-
-      <ThemedView style={styles.background}>
-        <Image
-          resizeMode="contain"
-          source={require("@/assets/images/doctor-checking-to-heartrate-monitor-4704802-3919128.jpg")}
-          style={styles.image1}
-        />
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">
-            Medición de la Frecuencia
-            Cardiaca
-          </ThemedText>
-        </ThemedView>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">
-          Se tomará le número máximo de palpitaciones segun tu edad y género.
-        </ThemedText>
       </ThemedView>
 
       <ThemedView style={styles.titleContainer}>

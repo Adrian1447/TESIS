@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import Onboarding from "./onBoarding";
+import PrincipalScreen from "./(tabs)/principal";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,11 @@ export default function HomeScreen() {
         <Stack.Screen
           name="Onboarding"
           component={Onboarding}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Principal"
+          component={PrincipalScreen}
           options={{ headerShown: false }}
         />
         {/* Agrega otras pantallas aquí */}
