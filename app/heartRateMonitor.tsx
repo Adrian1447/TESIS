@@ -5,7 +5,7 @@ const HeartRateMonitor = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Mide tu Frecuencia Cardiaca</Text>
-      <Image source={require('./assets/images/')} style={styles.heartImage} />
+      <Image source={require('@/assets/images/heart-beat-5665510-4788941.jpg')} style={styles.heartImage} />
       <View style={styles.heartRateContainer}>
         <Text style={styles.heartRateText}>Frecuencia Cardiaca</Text>
         <View style={styles.heartRateScale}>
