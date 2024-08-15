@@ -28,7 +28,7 @@ import RNBluetoothClassic, {
   BluetoothDevice,
   BluetoothDeviceReadEvent,
 } from "react-native-bluetooth-classic";
-import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
+// import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
 const requestBluetoothPermission = async () => {
   if (Platform.OS === "ios") {
@@ -73,17 +73,17 @@ const requestBluetoothPermission = async () => {
 
 export default function PrincipalScreen() {
   //#region Bluetooth BLE
-  const [bleManager] = useState(new BleManager());
-  const [statusBleManager, setStatusBleManager] = useState<
-    "idle" | "pending" | "success" | "error"
-  >("idle");
-  const [bluetoothState, setBluetoothState] = useState<StateBluetooth | null>(
-    null
-  );
-  const [devicesBLE, setDevicesBLE] = useState<DeviceBLE[]>([]);
-  const [isScanningBLE, setIsScanningBLE] = useState<boolean>(false);
-  const [connectedDeviceBLE, setConnectedDeviceBLE] =
-    useState<DeviceBLE | null>(null);
+  // const [bleManager] = useState(new BleManager());
+  // const [statusBleManager, setStatusBleManager] = useState<
+  //   "idle" | "pending" | "success" | "error"
+  // >("idle");
+  // const [bluetoothState, setBluetoothState] = useState<StateBluetooth | null>(
+  //   null
+  // );
+  // const [devicesBLE, setDevicesBLE] = useState<DeviceBLE[]>([]);
+  // const [isScanningBLE, setIsScanningBLE] = useState<boolean>(false);
+  // const [connectedDeviceBLE, setConnectedDeviceBLE] =
+  //   useState<DeviceBLE | null>(null);
 
   //#region Bluetooth BLC
   const [isScanningBLC, setIsScanningBLC] = useState<boolean>(false);
@@ -94,16 +94,16 @@ export default function PrincipalScreen() {
   console.log("Data");
   console.log(data);
 
-  useEffect(function checkPermissions() {
-    (async () => {
-      if (Platform.OS === "ios") {
-        const status = await check(PERMISSIONS.IOS.BLUETOOTH);
-        if (status !== RESULTS.GRANTED) {
-          await request(PERMISSIONS.IOS.BLUETOOTH);
-        }
-      }
-    })();
-  }, []);
+  // useEffect(function checkPermissions() {
+  //   (async () => {
+  //     if (Platform.OS === "ios") {
+  //       const status = await check(PERMISSIONS.IOS.BLUETOOTH);
+  //       if (status !== RESULTS.GRANTED) {
+  //         await request(PERMISSIONS.IOS.BLUETOOTH);
+  //       }
+  //     }
+  //   })();
+  // }, []);
 
   //region Bluetooth Classic Functions
   const onReceivedData = (event: BluetoothDeviceReadEvent) => {
@@ -185,105 +185,107 @@ export default function PrincipalScreen() {
 
   useEffect(function firstLoadingLibraryBlC() {
     (async () => {
-      // RNBluetoothClassic.();
+      console.log("RNBluetoothClassic");
+      // RNBluetoothClassic.isBluetoothAvailable();
       const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+      console.log("isBluetoothEnabled", isBluetoothEnabled);
       setIsBluetoothEnabledBLC(isBluetoothEnabled);
     })();
-  });
+  },[]);
 
   //region Bluetooth BLE Functions
-  useEffect(
-    function firstLoadingLibraryBleManager() {
-      const subscription = bleManager.onStateChange((stateBluetooth) => {
-        setStatusBleManager("success");
-        setBluetoothState(stateBluetooth);
-      }, true);
-      return () => {
-        subscription.remove();
-        bleManager.destroy();
-      };
-    },
-    [bleManager]
-  );
+  // useEffect(
+  //   function firstLoadingLibraryBleManager() {
+  //     const subscription = bleManager.onStateChange((stateBluetooth) => {
+  //       setStatusBleManager("success");
+  //       setBluetoothState(stateBluetooth);
+  //     }, true);
+  //     return () => {
+  //       subscription.remove();
+  //       bleManager.destroy();
+  //     };
+  //   },
+  //   [bleManager]
+  // );
 
-  const startScanBLE = async () => {
-    const permission = await requestBluetoothPermission();
-    if (permission) {
-      bleManager
-        .state()
-        .then((state) => {
-          if (state !== "PoweredOn") {
-            Alert.alert(
-              "Bluetooth Error",
-              "Activa el Bluetooth primero pz sano"
-            );
-            return;
-          }
-          setIsScanningBLE(true);
-          setDevicesBLE([]);
-          bleManager.startDeviceScan(null, null, (error, device) => {
-            if (error) {
-              console.error(
-                `Error during scan: ${error.message}, Reason: ${error.reason}`
-              );
-              Alert.alert("Scan Error", `Error: ${error.message}`);
-              setIsScanningBLE(false);
-              return;
-            }
-            if (device) {
-              setDevicesBLE((prevDevices) => {
-                if (!prevDevices.find((d) => d.id === device.id)) {
-                  return [...prevDevices, device];
-                }
-                return prevDevices;
-              });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error(`Bluetooth state error: ${error.message}`);
-        });
-    } else {
-      Alert.alert(
-        "Permission Error",
-        "Location and Bluetooth permissions are required to scan for devicesBLE."
-      );
-    }
-  };
+  // const startScanBLE = async () => {
+  //   const permission = await requestBluetoothPermission();
+  //   if (permission) {
+  //     bleManager
+  //       .state()
+  //       .then((state) => {
+  //         if (state !== "PoweredOn") {
+  //           Alert.alert(
+  //             "Bluetooth Error",
+  //             "Activa el Bluetooth primero pz sano"
+  //           );
+  //           return;
+  //         }
+  //         setIsScanningBLE(true);
+  //         setDevicesBLE([]);
+  //         bleManager.startDeviceScan(null, null, (error, device) => {
+  //           if (error) {
+  //             console.error(
+  //               `Error during scan: ${error.message}, Reason: ${error.reason}`
+  //             );
+  //             Alert.alert("Scan Error", `Error: ${error.message}`);
+  //             setIsScanningBLE(false);
+  //             return;
+  //           }
+  //           if (device) {
+  //             setDevicesBLE((prevDevices) => {
+  //               if (!prevDevices.find((d) => d.id === device.id)) {
+  //                 return [...prevDevices, device];
+  //               }
+  //               return prevDevices;
+  //             });
+  //           }
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error(`Bluetooth state error: ${error.message}`);
+  //       });
+  //   } else {
+  //     Alert.alert(
+  //       "Permission Error",
+  //       "Location and Bluetooth permissions are required to scan for devicesBLE."
+  //     );
+  //   }
+  // };
 
-  const stopScanBLE = () => {
-    bleManager.stopDeviceScan();
-    setIsScanningBLE(false);
-  };
+  // const stopScanBLE = () => {
+  //   bleManager.stopDeviceScan();
+  //   setIsScanningBLE(false);
+  // };
 
-  const connectToDeviceBLE = async (device: DeviceBLE) => {
-    try {
-      stopScanBLE();
-      // Verificar si el dispositivo ya está conectado
-      const connectedDevices = await bleManager.connectedDevices([device.id]);
-      if (connectedDevices.length > 0) {
-        Alert.alert("Device is already connected");
-        return;
-      }
+  // const connectToDeviceBLE = async (device: DeviceBLE) => {
+  //   try {
+  //     stopScanBLE();
+  //     // Verificar si el dispositivo ya está conectado
+  //     const connectedDevices = await bleManager.connectedDevices([device.id]);
+  //     if (connectedDevices.length > 0) {
+  //       Alert.alert("Device is already connected");
+  //       return;
+  //     }
 
-      // Intentar conectar al dispositivo
-      const connectedDeviceBLE = await device.connect();
-      setConnectedDeviceBLE(connectedDeviceBLE);
-      Alert.alert("Connected to device");
-    } catch (error) {
-      if (error instanceof BleError) {
-        console.error("BLE Error:", error.message);
-        Alert.alert("BLE Error:", error.message);
-      } else {
-        console.error("Error:", error);
-        Alert.alert("Error:", error?.toString());
-      }
-    }
-  };
+  //     // Intentar conectar al dispositivo
+  //     const connectedDeviceBLE = await device.connect();
+  //     setConnectedDeviceBLE(connectedDeviceBLE);
+  //     Alert.alert("Connected to device");
+  //   } catch (error) {
+  //     if (error instanceof BleError) {
+  //       console.error("BLE Error:", error.message);
+  //       Alert.alert("BLE Error:", error.message);
+  //     } else {
+  //       console.error("Error:", error);
+  //       Alert.alert("Error:", error?.toString());
+  //     }
+  //   }
+  // };
   const width = Dimensions.get('window').width;
   return (
     <View>
-      <ThemedView
+      {/* <ThemedView
         style={{
           borderWidth: 2,
           borderColor: "green",
@@ -357,7 +359,7 @@ export default function PrincipalScreen() {
             />
           </>
         )}
-      </ThemedView>
+      </ThemedView> */}
 
       <ThemedView
         style={{
