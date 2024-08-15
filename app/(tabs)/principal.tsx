@@ -360,7 +360,13 @@ export default function PrincipalScreen() {
           </>
         )}
       </ThemedView> */}
-
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Asegurate que tu Bluetooth esté encedido.</ThemedText>
+        <Image 
+          source={require("@/assets/images/f35f936bc51ddff8ba8fdaf13209be9a.gif")}
+          style={styles.imageBluetooth}
+        />
+      </ThemedView>
       <ThemedView
         style={{
           borderWidth: 2,
@@ -407,10 +413,6 @@ export default function PrincipalScreen() {
         )}
       </ThemedView>
 
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
@@ -470,4 +472,9 @@ const styles = StyleSheet.create({
     color: "#FFF",
     },
     image1: { position: "relative", aspectRatio: "0.89" },
+    imageBluetooth: {
+      width: 150,
+      height: 150,
+      marginBottom: 40,
+    },
   });
