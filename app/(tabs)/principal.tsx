@@ -18,17 +18,59 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import {
-  BleError,
-  BleManager,
-  Device as DeviceBLE,
-  State as StateBluetooth,
-} from "react-native-ble-plx";
 import RNBluetoothClassic, {
   BluetoothDevice,
   BluetoothDeviceReadEvent,
 } from "react-native-bluetooth-classic";
 // import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
+
+const requestAccessFineLocationPermission = async () => {
+  try {
+    // Verifica si la plataforma es Android (esto no es necesario en iOS)
+    if (Platform.OS === "android") {
+      const granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      ]);
+      console.log("Granted:", granted);
+
+      // Revisa los resultados para cada permiso
+      const permissionsGranted =
+        granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] ===
+          PermissionsAndroid.RESULTS.GRANTED;
+
+      if (permissionsGranted) {
+        console.log("All permissions granted");
+      } else {
+        console.log("One or more permissions denied");
+        Alert.alert("Permiso denegado", "One or more permissions denied");
+      }
+    } else {
+      console.log("Platform is not Android, no permissions needed");
+    }
+  } catch (err) {
+    console.error("Error while requesting permissions:", err);
+  }
+
+  // const granted = await PermissionsAndroid.request(
+  //   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+  //   {
+  //     title: "Access fine location required for discovery",
+  //     message:
+  //       "In order to perform discovery, you must enable/allow " +
+  //       "fine location access.",
+  //     buttonNeutral: "Ask Me Later",
+  //     buttonNegative: "Cancel",
+  //     buttonPositive: "OK",
+  //   }
+  // );
+  // return granted === PermissionsAndroid.RESULTS.GRANTED;
+};
 
 const requestBluetoothPermission = async () => {
   if (Platform.OS === "ios") {
@@ -72,19 +114,6 @@ const requestBluetoothPermission = async () => {
 };
 
 export default function PrincipalScreen() {
-  //#region Bluetooth BLE
-  // const [bleManager] = useState(new BleManager());
-  // const [statusBleManager, setStatusBleManager] = useState<
-  //   "idle" | "pending" | "success" | "error"
-  // >("idle");
-  // const [bluetoothState, setBluetoothState] = useState<StateBluetooth | null>(
-  //   null
-  // );
-  // const [devicesBLE, setDevicesBLE] = useState<DeviceBLE[]>([]);
-  // const [isScanningBLE, setIsScanningBLE] = useState<boolean>(false);
-  // const [connectedDeviceBLE, setConnectedDeviceBLE] =
-  //   useState<DeviceBLE | null>(null);
-
   //#region Bluetooth BLC
   const [isScanningBLC, setIsScanningBLC] = useState<boolean>(false);
   const [devicesBLC, setDevicesBLC] = useState<BluetoothDevice[]>([]);
@@ -92,18 +121,6 @@ export default function PrincipalScreen() {
     useState<boolean>(false);
   const [data, setData] = useState<any>([]);
   console.log("Data");
-  console.log(data);
-
-  // useEffect(function checkPermissions() {
-  //   (async () => {
-  //     if (Platform.OS === "ios") {
-  //       const status = await check(PERMISSIONS.IOS.BLUETOOTH);
-  //       if (status !== RESULTS.GRANTED) {
-  //         await request(PERMISSIONS.IOS.BLUETOOTH);
-  //       }
-  //     }
-  //   })();
-  // }, []);
 
   //region Bluetooth Classic Functions
   const onReceivedData = (event: BluetoothDeviceReadEvent) => {
@@ -185,184 +202,34 @@ export default function PrincipalScreen() {
 
   useEffect(function firstLoadingLibraryBlC() {
     (async () => {
-      console.log("RNBluetoothClassic");
-      // RNBluetoothClassic.isBluetoothAvailable();
-      const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
-      console.log("isBluetoothEnabled", isBluetoothEnabled);
-      setIsBluetoothEnabledBLC(isBluetoothEnabled);
+      try {
+        console.log("RNBluetoothClassic");
+        const isBluetoothAvailable =
+          await RNBluetoothClassic.isBluetoothAvailable();
+        console.log("isBluetoothAvailable", isBluetoothAvailable);
+        const isBluetoothEnabled =
+          await RNBluetoothClassic.isBluetoothEnabled();
+        console.log("isBluetoothEnabled", isBluetoothEnabled);
+        setIsBluetoothEnabledBLC(isBluetoothEnabled);
+      } catch (error) {
+        // console.error("Error:", error);
+      }
     })();
-  },[]);
+  }, []);
 
-  //region Bluetooth BLE Functions
-  // useEffect(
-  //   function firstLoadingLibraryBleManager() {
-  //     const subscription = bleManager.onStateChange((stateBluetooth) => {
-  //       setStatusBleManager("success");
-  //       setBluetoothState(stateBluetooth);
-  //     }, true);
-  //     return () => {
-  //       subscription.remove();
-  //       bleManager.destroy();
-  //     };
-  //   },
-  //   [bleManager]
-  // );
+  const width = Dimensions.get("window").width;
 
-  // const startScanBLE = async () => {
-  //   const permission = await requestBluetoothPermission();
-  //   if (permission) {
-  //     bleManager
-  //       .state()
-  //       .then((state) => {
-  //         if (state !== "PoweredOn") {
-  //           Alert.alert(
-  //             "Bluetooth Error",
-  //             "Activa el Bluetooth primero pz sano"
-  //           );
-  //           return;
-  //         }
-  //         setIsScanningBLE(true);
-  //         setDevicesBLE([]);
-  //         bleManager.startDeviceScan(null, null, (error, device) => {
-  //           if (error) {
-  //             console.error(
-  //               `Error during scan: ${error.message}, Reason: ${error.reason}`
-  //             );
-  //             Alert.alert("Scan Error", `Error: ${error.message}`);
-  //             setIsScanningBLE(false);
-  //             return;
-  //           }
-  //           if (device) {
-  //             setDevicesBLE((prevDevices) => {
-  //               if (!prevDevices.find((d) => d.id === device.id)) {
-  //                 return [...prevDevices, device];
-  //               }
-  //               return prevDevices;
-  //             });
-  //           }
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.error(`Bluetooth state error: ${error.message}`);
-  //       });
-  //   } else {
-  //     Alert.alert(
-  //       "Permission Error",
-  //       "Location and Bluetooth permissions are required to scan for devicesBLE."
-  //     );
-  //   }
-  // };
-
-  // const stopScanBLE = () => {
-  //   bleManager.stopDeviceScan();
-  //   setIsScanningBLE(false);
-  // };
-
-  // const connectToDeviceBLE = async (device: DeviceBLE) => {
-  //   try {
-  //     stopScanBLE();
-  //     // Verificar si el dispositivo ya está conectado
-  //     const connectedDevices = await bleManager.connectedDevices([device.id]);
-  //     if (connectedDevices.length > 0) {
-  //       Alert.alert("Device is already connected");
-  //       return;
-  //     }
-
-  //     // Intentar conectar al dispositivo
-  //     const connectedDeviceBLE = await device.connect();
-  //     setConnectedDeviceBLE(connectedDeviceBLE);
-  //     Alert.alert("Connected to device");
-  //   } catch (error) {
-  //     if (error instanceof BleError) {
-  //       console.error("BLE Error:", error.message);
-  //       Alert.alert("BLE Error:", error.message);
-  //     } else {
-  //       console.error("Error:", error);
-  //       Alert.alert("Error:", error?.toString());
-  //     }
-  //   }
-  // };
-  const width = Dimensions.get('window').width;
   return (
     <View>
-      {/* <ThemedView
-        style={{
-          borderWidth: 2,
-          borderColor: "green",
-          borderRadius: 10,
-          padding: 20,
-        }}
-      >
-        <ThemedText type="title">Bluetooht BLE</ThemedText>
-
-        {statusBleManager === "pending" ||
-          (statusBleManager === "idle" && (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ))}
-
-        {statusBleManager === "success" && (
-          <>
-            {bluetoothState === StateBluetooth.PoweredOn ? (
-              <Text>Bluetooth is ON</Text>
-            ) : bluetoothState === StateBluetooth.PoweredOff ? (
-              <Text>Bluetooth is OFF</Text>
-            ) : (
-              <Text>Bluetooth State: {bluetoothState}</Text>
-            )}
-          </>
-        )}
-
-        {bluetoothState === StateBluetooth.PoweredOn && (
-          <>
-            <Text>
-              Cuando el dispositivo está conectado, no transmitirá y debe
-              desconectarse de la central para volver a escanear. Solo se puede
-              registrar un agente de escucha de exploración.
-            </Text>
-            <Button
-              title={isScanningBLE ? "Stop Scanning..." : "Start Scanning***"}
-              color={isScanningBLE ? "blue" : "green"}
-              onPress={isScanningBLE ? stopScanBLE : startScanBLE}
-            />
-            {connectedDeviceBLE && (
-              <Text>Connected to: {connectedDeviceBLE.name}</Text>
-            )}
-            <FlatList
-              showsHorizontalScrollIndicator
-              showsVerticalScrollIndicator
-              horizontal
-              data={devicesBLE}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <View style={{ padding: 10 }}>
-                  <Text>ID: {item.id}</Text>
-                  <Text>Name: {item.name || "N/A"}</Text>
-                  <Text>RSSI: {item.rssi}</Text>
-                  <Text>LocalName: {item.localName}</Text>
-                  <Text>ManufacturerData: {item.manufacturerData}</Text>
-                  <Text>
-                    IsConnectable:{" "}
-                    {item.isConnectable ? (
-                      <Text style={{ color: "green" }}>Yes</Text>
-                    ) : (
-                      <Text style={{ color: "red" }}>No</Text>
-                    )}
-                  </Text>
-                  <Pressable style={{ width: 100, height: 50 }}>
-                    <Button
-                      title="Connect"
-                      onPress={() => connectToDeviceBLE(item)}
-                    />
-                  </Pressable>
-                </View>
-              )}
-            />
-          </>
-        )}
-      </ThemedView> */}
+      <Button
+        title="request permissions"
+        onPress={requestAccessFineLocationPermission}
+      />
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Asegurate que tu Bluetooth esté encedido.</ThemedText>
-        <Image 
+        <ThemedText type="title">
+          Asegurate que tu Bluetooth esté encedido.
+        </ThemedText>
+        <Image
           source={require("@/assets/images/f35f936bc51ddff8ba8fdaf13209be9a.gif")}
           style={styles.imageBluetooth}
         />
@@ -470,11 +337,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "stretch",
     color: "#FFF",
-    },
-    image1: { position: "relative", aspectRatio: "0.89" },
-    imageBluetooth: {
-      width: 150,
-      height: 150,
-      marginBottom: 40,
-    },
-  });
+  },
+  image1: { position: "relative", aspectRatio: "0.89" },
+  imageBluetooth: {
+    width: 150,
+    height: 150,
+    marginBottom: 40,
+  },
+});
