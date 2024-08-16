@@ -3,6 +3,7 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import React, { useEffect, useState } from "react";
+import FastImage from 'react-native-fast-image';
 import {
   ActivityIndicator,
   Alert,
@@ -220,29 +221,23 @@ export default function PrincipalScreen() {
   const width = Dimensions.get("window").width;
 
   return (
-    <View>
+    <View style={
+      styles.container
+      }>
       <Button
         title="request permissions"
         onPress={requestAccessFineLocationPermission}
       />
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">
+      <View>
+        <Text 
+          style={styles.title}>
           Asegurate que tu Bluetooth esté encedido.
-        </ThemedText>
-        <Image
+        </Text>
+        <FastImage
           source={require("@/assets/images/f35f936bc51ddff8ba8fdaf13209be9a.gif")}
           style={styles.imageBluetooth}
-        />
-      </ThemedView>
-      <ThemedView
-        style={{
-          borderWidth: 2,
-          borderColor: "green",
-          borderRadius: 10,
-          padding: 20,
-        }}
-      >
-        <ThemedText type="title">Bluetooht BLC</ThemedText>
+        />  
+        <Text>Bluetooht BLC</Text>
         {isBluetoothEnabledBLC ? (
           <Text>Bluetooth is ON</Text>
         ) : (
@@ -250,9 +245,8 @@ export default function PrincipalScreen() {
         )}
         {isBluetoothEnabledBLC && (
           <>
-            <Text>Bluetooth devicesBLClasic:</Text>
             <Button
-              title={isScanningBLC ? "Stop Scanning..." : "Start Scanning***"}
+              title={isScanningBLC ? "Stop Scanning..." : "Start Scanning!"}
               color={isScanningBLC ? "blue" : "green"}
               onPress={isScanningBLC ? stopScanBLC : startScanBLC}
             />
@@ -278,70 +272,32 @@ export default function PrincipalScreen() {
             />
           </>
         )}
-      </ThemedView>
-
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: "cmd + d", android: "cmd + m" })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    textAlign: "center",
-    gap: 8,
+  container: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1D1D1D',
+    paddingTop: 30
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFF', // White color for the text
+    textAlign: 'center',
+    marginBottom: 20, 
+    paddingTop:10
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-  background: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "stretch",
-    color: "#FFF",
-  },
-  image1: { position: "relative", aspectRatio: "0.89" },
   imageBluetooth: {
-    width: 150,
-    height: 150,
-    marginBottom: 40,
+    width: 250,
+    height: 250,
+    bottom: 5,
+    resizeMode: 'contain',
+    left:20
   },
 });
