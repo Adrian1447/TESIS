@@ -23,6 +23,8 @@ import RNBluetoothClassic, {
   BluetoothDevice,
   BluetoothDeviceReadEvent,
 } from "react-native-bluetooth-classic";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { StackNavigationProp } from "@react-navigation/stack";
 // import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
 
 const requestAccessFineLocationPermission = async () => {
@@ -114,7 +116,11 @@ const requestBluetoothPermission = async () => {
   return false;
 };
 
-export default function PrincipalScreen() {
+type TProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+export default function PrincipalScreen({ navigation }: TProps) {
   //#region Bluetooth BLC
   const [isScanningBLC, setIsScanningBLC] = useState<boolean>(false);
   const [devicesBLC, setDevicesBLC] = useState<BluetoothDevice[]>([]);
@@ -220,14 +226,18 @@ export default function PrincipalScreen() {
 
   const width = Dimensions.get("window").width;
 
+  type TProps = {
+    navigation: StackNavigationProp<any, any>;
+  };
+  
+
   return (
     <View style={
       styles.container
       }>
-      <Button
-        title="request permissions"
-        onPress={requestAccessFineLocationPermission}
-      />
+      <TouchableOpacity  onPress={requestAccessFineLocationPermission} style={styles.appButtonContainer}>
+        <Text style={{textAlign: "center", fontWeight: 'bold',color: '#FFF',}}>Request Permissions</Text>
+      </TouchableOpacity>
       <View>
         <Text 
           style={styles.title}>
@@ -237,18 +247,35 @@ export default function PrincipalScreen() {
           source={require("@/assets/images/f35f936bc51ddff8ba8fdaf13209be9a.gif")}
           style={styles.imageBluetooth}
         />  
-        <Text>Bluetooht BLC</Text>
         {isBluetoothEnabledBLC ? (
-          <Text>Bluetooth is ON</Text>
+          <Text style={
+            {paddingBottom: 50,
+              fontWeight: "bold",
+              color: "white",
+              fontSize: 30,
+              textAlign: "center"
+            }
+          }>Bluetooth is ON</Text>
         ) : (
-          <Text>Bluetooth is OFF</Text>
+          <Text style={
+            {paddingBottom: 50,
+              fontWeight: "bold",
+              color: "white",
+              fontSize: 30,
+              textAlign: "center"
+            }
+          }>Bluetooth is OFF</Text>
         )}
         {isBluetoothEnabledBLC && (
           <>
             <Button
               title={isScanningBLC ? "Stop Scanning..." : "Start Scanning!"}
-              color={isScanningBLC ? "blue" : "green"}
+              color={isScanningBLC ? "blue" : "#97A0A8"}
               onPress={isScanningBLC ? stopScanBLC : startScanBLC}
+            />
+            <Button
+              title="Next"
+              onPress={() => navigation.navigate("HeartRateMonitor")}
             />
             <FlatList
               showsHorizontalScrollIndicator
@@ -271,7 +298,9 @@ export default function PrincipalScreen() {
               )}
             />
           </>
+          
         )}
+         
       </View>
     </View>
   );
@@ -291,7 +320,7 @@ const styles = StyleSheet.create({
     color: '#FFF', // White color for the text
     textAlign: 'center',
     marginBottom: 20, 
-    paddingTop:10
+    paddingTop:50
   },
   imageBluetooth: {
     width: 250,
@@ -299,5 +328,13 @@ const styles = StyleSheet.create({
     bottom: 5,
     resizeMode: 'contain',
     left:20
+  },
+  appButtonContainer: {
+    top: 20,
+    backgroundColor: "#97A0A8",
+    borderRadius: 50,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    width: 250,
   },
 });
