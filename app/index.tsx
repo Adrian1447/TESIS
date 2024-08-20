@@ -6,6 +6,7 @@ import "react-native-reanimated";
 import Onboarding from "./onBoarding";
 import PrincipalScreen from "./(tabs)/principal";
 import HeartRateMonitor from "./heartRateMonitor"
+import DataMonitor from "./dataMonitor"
 
 const Stack = createStackNavigator();
 
@@ -34,6 +35,11 @@ export default function HomeScreen() {
         name="HeartRateMonitor"
         component={HeartRateMonitor}
         options={{ headerShown: false }}
+        />
+        <Stack.Screen
+        name="DataMonitor"
+        component={DataMonitor}
+        options={{headerShown: false}}
         />
         {/* Agrega otras pantallas aquí */}
       </Stack.Navigator>

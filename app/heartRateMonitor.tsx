@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const HeartRateMonitor = () => {
+type TProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+const HeartRateMonitor = ({ navigation }: TProps) => {
   return (
     <View style={styles.container}>
       <Image source={require('@/assets/images/RectangleHeartMonitor.png')} />
@@ -18,6 +23,7 @@ const HeartRateMonitor = () => {
           <Image source={require('@/assets/images/RectangleHeartMonitorInside.png')}/>
           <View style={styles.heartRateContainerInsideText}>
            <Text style={styles.heartRateText}>Frecuencia Cardiaca</Text>
+           <Image source={require('@/assets/images/Medidas.png')} style={styles.medidas}/>
             <View style={styles.heartRateScale}>
               <Text style={[styles.scaleText]}>60</Text>
               <Text style={[styles.scaleText]}>102</Text>
@@ -31,7 +37,7 @@ const HeartRateMonitor = () => {
               <Text style={[styles.labelText, styles.maximum]}>Máximo</Text>
               <Text style={[styles.labelText, styles.danger]}>Peligro</Text>
             </View>
-            <TouchableOpacity style={styles.startButton}>
+            <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate("DataMonitor")}>
               <Text style={styles.startButtonText}>Comencemos</Text>
             </TouchableOpacity>
           </View>
@@ -86,12 +92,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 10,
   },
+  medidas:{
+    top:10,
+    left: 20
+  },
   heartRateScale: {
     flex: 2,
     paddingTop: 20,
     paddingLeft: 10,
     paddingRight:10,
-    top: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
@@ -114,7 +123,6 @@ const styles = StyleSheet.create({
   },
   heartRateLabels: {
     flex: 2,
-    paddingTop: 15,
     paddingLeft: 20,
     paddingRight:20,
     flexDirection: 'row',
