@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity, TextInput  } from 'react-native';
-import Slider from '@react-native-community/slider';
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const DataMonitor = () => {
+type TProps = {
+  navigation: StackNavigationProp<any, any>;
+};
+
+
+const DataMonitor = ({ navigation }: TProps) => {
   const [age, setAge] = useState('26');
   const [weight, setWeight] = useState('61');
 
@@ -16,7 +21,7 @@ const DataMonitor = () => {
       
       <View style={styles.dataContainer}>
         <Text style={styles.labelEdad}>Edad</Text>
-        <Image source={require('@/assets/images/CircleDataMonitor1.png')} />
+        <Image source={require('@/assets/images/CircleDataMonitor1.png')} style={{bottom: 10}}/>
         <TextInput
           style={styles.dataEdad}
           value={age}
@@ -25,26 +30,26 @@ const DataMonitor = () => {
           maxLength={3} // Limita la edad a 3 dígitos
           textAlign="center"
           />
-          <Image source={require('@/assets/images/5883396.png')} style={{width: 40, height: 40, position: 'absolute', right: 50, top: 110}}/>
+          <Image source={require('@/assets/images/5883396.png')} style={{width: 40, height: 40, position: 'absolute', right: 50, top: 100}}/>
           <Text style={styles.unitEdad}>AÑOS</Text>
       </View>
       
       <View style={styles.dataContainer}>
         <Text style={styles.labelPeso}>Peso</Text>
-        <Image source={require('@/assets/images/CircleDataMonitor1.png')} />
+        <Image source={require('@/assets/images/CircleDataMonitor1.png')} style={{top: -50}}/>
         <TextInput
           style={styles.dataPeso}
           value={weight}
-          onChangeText={setAge}
+          onChangeText={setWeight}
           keyboardType="numeric" // Teclado numérico
           maxLength={3} // Limita la edad a 3 dígitos
           textAlign="center"
           />
-           <Image source={require('@/assets/images/1712070-200.png')} style={{width: 40, height: 40, position: 'absolute', right: 50, top: 110}}/>
+           <Image source={require('@/assets/images/1712070-200.png')} style={{width: 40, height: 40, position: 'absolute', right: 50, top: 63}}/>
           <Text style={styles.unitPeso}>KG</Text>
       </View>
       
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DataMonitor2")}>
         <Text style={styles.buttonText}>Continuar</Text>
       </TouchableOpacity>
     </View>
@@ -59,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   subContainer: {
-    top: 40,
+    top: 50,
     position: 'absolute',
   },
   header: {
@@ -77,24 +82,24 @@ const styles = StyleSheet.create({
   },
   dataContainer: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
   },
   labelEdad: {
-    top: 20,
+    top: 10,
     right:120,
     fontSize: 18,
     color: '#fff',
     marginBottom: 10,
   },
   labelPeso: {
-    top: 20,
+    top: -30,
     right:120,
     fontSize: 18,
     color: '#fff',
     marginBottom: 10,
   },
   dataEdad: {
-    top: 85,
+    top: 75,
     left: 40,
     position: 'absolute',
     fontSize: 80,
@@ -102,7 +107,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   dataPeso:{
-    top: 85,
+    top: 35,
     left: 40,
     position: 'absolute',
     fontSize: 80,
@@ -113,21 +118,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#000',
     position: 'absolute',
-    top: 150,
+    top: 140,
     right: 50
-
   },
   unitPeso: {
     fontSize: 14,
     color: '#000',
     position: 'absolute',
-    top: 155,
-    right: 65
+    top: 104,
+    right: 67
   },
   button: {
+    position: 'absolute',
+    bottom: 20,
+    right: 10,
     backgroundColor: '#444',
     paddingVertical: 10,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     borderRadius: 20,
   },
   buttonText: {

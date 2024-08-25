@@ -7,6 +7,8 @@ import Onboarding from "./onBoarding";
 import PrincipalScreen from "./(tabs)/principal";
 import HeartRateMonitor from "./heartRateMonitor"
 import DataMonitor from "./dataMonitor"
+import DataMonitor2 from "./datMonitor2"
+import Medicion from "./medicion";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +41,16 @@ export default function HomeScreen() {
         <Stack.Screen
         name="DataMonitor"
         component={DataMonitor}
+        options={{headerShown: false}}
+        />
+        <Stack.Screen 
+        name="DataMonitor2"
+        component={DataMonitor2}
+        options={{headerShown: false}}
+        />
+        <Stack.Screen 
+        name="Medicion"
+        component={Medicion}
         options={{headerShown: false}}
         />
         {/* Agrega otras pantallas aquí */}
