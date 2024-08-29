@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image} from 'react-native';// You can replace this with any icon library you use
+import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';// You can replace this with any icon library you use
 
 
 const Medicion = () => {
@@ -7,11 +7,14 @@ const Medicion = () => {
     <View style={styles.appContainer}>
       <View style={styles.dataContainerMedicion}> 
         <Image source={require('@/assets/images/CircleMonitor2.png')}style={{width: 250, height: 250, bottom: 10}}/>
-        <Text style={styles.dataMedicion}>74</Text>
+        <Text style={styles.dataMedicion}>--</Text>
         <Image source={require('@/assets/images/red-heart.jpg')} style={{width: 40, height: 40, position: 'absolute', right: 65, top: 75}}/>
         <Text style={styles.unitMedicion}>BRM</Text>
       </View>
       <Text style={styles.dataPromedio}>Promedio 71</Text>
+      <TouchableOpacity style={styles.startButton}>
+              <Text style={styles.startButtonText}>Comenzar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -49,7 +52,20 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#7D7A8E',
     fontWeight: 'bold',
-  }
+  },
+  startButton: {
+    alignItems: 'center',
+    width: 250,
+    backgroundColor: '#97A0A8',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    top: 20
+  },
+  startButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
 });
 
 export default Medicion;

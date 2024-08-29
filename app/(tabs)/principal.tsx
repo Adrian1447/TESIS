@@ -1,15 +1,9 @@
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import React, { useEffect, useState } from "react";
 import FastImage from "react-native-fast-image";
 import {
-  ActivityIndicator,
   Alert,
   Button,
   FlatList,
-  Image,
   PermissionsAndroid,
   Platform,
   Pressable,

@@ -28,7 +28,7 @@ function DescriptionScreen3({ navigation }: TProps) {
       </TouchableOpacity> */}
       <Button
         title="Get Started"
-        onPress={() => navigation.navigate("Principal")}
+        onPress={() => navigation.navigate("LoginScreen")}
       />
     </View>
   );

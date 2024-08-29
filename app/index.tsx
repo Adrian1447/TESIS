@@ -9,6 +9,7 @@ import HeartRateMonitor from "./heartRateMonitor"
 import DataMonitor from "./dataMonitor"
 import DataMonitor2 from "./datMonitor2"
 import Medicion from "./medicion";
+import LoginScreen from "./login"
 
 const Stack = createStackNavigator();
 
@@ -17,16 +18,16 @@ export default function HomeScreen() {
     <NavigationContainer independent={true}>
       <Stack.Navigator
         initialRouteName="Onboarding"
-        screenOptions={{ headerShown: false }}
-      >
-        {/*<Stack.Screen name="descriptionScreen1" component={DescriptionScreen1} options={{ headerShown: false }} />
-        <Stack.Screen name="descriptionScreen2" component={DescriptionScreen2} options={{ headerShown: false }} />
-        <Stack.Screen name="descriptionScreen3" component={DescriptionScreen3} options={{ headerShown: false }} />
-        <Stack.Screen name="principal" component={HomeScreen} options={{ headerShown: false }} />*/}
+        screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Onboarding"
           component={Onboarding}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="Principal"
