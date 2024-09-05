@@ -1,26 +1,38 @@
-import React, {useContext} from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';// You can replace this with any icon library you use
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"; // You can replace this with any icon library you use
 import { StackNavigationProp } from "@react-navigation/stack";
-import { BluetoothContext } from './bluetoothContext';
 
 type TProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
 const Medicion = ({ navigation }: TProps) => {
-  const { message } = useContext(BluetoothContext);
-
   return (
     <View style={styles.appContainer}>
-      <View style={styles.dataContainerMedicion}> 
-        <Image source={require('@/assets/images/CircleMonitor2.png')}style={{width: 250, height: 250, bottom: 10}}/>
-        <Text style={styles.dataMedicion}>${message}</Text>
-        <Image source={require('@/assets/images/red-heart.jpg')} style={{width: 40, height: 40, position: 'absolute', right: 65, top: 75}}/>
+      <View style={styles.dataContainerMedicion}>
+        <Image
+          source={require("@/assets/images/CircleMonitor2.png")}
+          style={{ width: 250, height: 250, bottom: 10 }}
+        />
+        {/* <Text style={styles.dataMedicion}>${message}</Text> */}
+        <Image
+          source={require("@/assets/images/red-heart.jpg")}
+          style={{
+            width: 40,
+            height: 40,
+            position: "absolute",
+            right: 65,
+            top: 75,
+          }}
+        />
         <Text style={styles.unitMedicion}>BRM</Text>
       </View>
       <Text style={styles.dataPromedio}>Promedio 71</Text>
-      <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate("ResultScreen")}>
-              <Text style={styles.startButtonText}>Comenzar</Text>
+      <TouchableOpacity
+        style={styles.startButton}
+        onPress={() => navigation.navigate("ResultScreen")}
+      >
+        <Text style={styles.startButtonText}>Comenzar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -29,48 +41,48 @@ const Medicion = ({ navigation }: TProps) => {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1c1c1e',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1c1c1e",
   },
   dataContainerMedicion: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
-  unitMedicion:{
+  unitMedicion: {
     fontSize: 23,
-    color: '#000',
-    position: 'absolute',
+    color: "#000",
+    position: "absolute",
     top: 110,
-    right: 54
+    right: 54,
   },
   dataMedicion: {
     top: 60,
     left: 60,
-    position: 'absolute',
+    position: "absolute",
     fontSize: 70,
-    color: '#000',
-    fontWeight: 'bold',
+    color: "#000",
+    fontWeight: "bold",
   },
-  dataPromedio:{
+  dataPromedio: {
     bottom: 310,
     left: 125,
-    position: 'absolute',
+    position: "absolute",
     fontSize: 20,
-    color: '#7D7A8E',
-    fontWeight: 'bold',
+    color: "#7D7A8E",
+    fontWeight: "bold",
   },
   startButton: {
-    alignItems: 'center',
+    alignItems: "center",
     width: 250,
-    backgroundColor: '#97A0A8',
+    backgroundColor: "#97A0A8",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    top: 20
+    top: 20,
   },
   startButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
 });

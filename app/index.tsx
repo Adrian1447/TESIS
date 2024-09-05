@@ -9,19 +9,18 @@ import HeartRateMonitor from "./heartRateMonitor";
 import DataMonitor from "./dataMonitor";
 import DataMonitor2 from "./datMonitor2";
 import Medicion from "./medicion";
-import LoginScreen from "./login" ;
+import LoginScreen from "./login";
 import ResultScreen from "./resultScreen";
-import { BluetoothProvider } from "./bluetoothContext";
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen() {
   return (
-    <BluetoothProvider>
     <NavigationContainer independent={true}>
       <Stack.Navigator
         initialRouteName="Onboarding"
-        screenOptions={{ headerShown: false }}>
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen
           name="Onboarding"
           component={Onboarding}
@@ -30,7 +29,7 @@ export default function HomeScreen() {
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Principal"
@@ -38,33 +37,32 @@ export default function HomeScreen() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-        name="HeartRateMonitor"
-        component={HeartRateMonitor}
-        options={{ headerShown: false }}
+          name="HeartRateMonitor"
+          component={HeartRateMonitor}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
-        name="DataMonitor"
-        component={DataMonitor}
-        options={{headerShown: false}}
+          name="DataMonitor"
+          component={DataMonitor}
+          options={{ headerShown: false }}
         />
-        <Stack.Screen 
-        name="DataMonitor2"
-        component={DataMonitor2}
-        options={{headerShown: false}}
+        <Stack.Screen
+          name="DataMonitor2"
+          component={DataMonitor2}
+          options={{ headerShown: false }}
         />
-        <Stack.Screen 
-        name="Medicion"
-        component={Medicion}
-        options={{headerShown: false}}
+        <Stack.Screen
+          name="Medicion"
+          component={Medicion}
+          options={{ headerShown: false }}
         />
-        <Stack.Screen 
-        name="ResultScreen"
-        component={ResultScreen}
-        options={{headerShown: false}}
+        <Stack.Screen
+          name="ResultScreen"
+          component={ResultScreen}
+          options={{ headerShown: false }}
         />
         {/* Agrega otras pantallas aquí */}
       </Stack.Navigator>
     </NavigationContainer>
-    </BluetoothProvider>
   );
 }
