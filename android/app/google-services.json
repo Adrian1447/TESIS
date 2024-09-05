@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "855309946635",
+    "project_id": "tesis-heartapp01",
+    "storage_bucket": "tesis-heartapp01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855309946635:android:9b68f7fd5cf4015d6f1c0e",
+        "android_client_info": {
+          "package_name": "com.anonymous.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZt19i4HJdxhPX0c_YM7f-XgtmtL2zv0c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

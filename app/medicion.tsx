@@ -1,18 +1,25 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';// You can replace this with any icon library you use
+import { StackNavigationProp } from "@react-navigation/stack";
+import { BluetoothContext } from './bluetoothContext';
 
+type TProps = {
+  navigation: StackNavigationProp<any, any>;
+};
 
-const Medicion = () => {
+const Medicion = ({ navigation }: TProps) => {
+  const { message } = useContext(BluetoothContext);
+
   return (
     <View style={styles.appContainer}>
       <View style={styles.dataContainerMedicion}> 
         <Image source={require('@/assets/images/CircleMonitor2.png')}style={{width: 250, height: 250, bottom: 10}}/>
-        <Text style={styles.dataMedicion}>--</Text>
+        <Text style={styles.dataMedicion}>${message}</Text>
         <Image source={require('@/assets/images/red-heart.jpg')} style={{width: 40, height: 40, position: 'absolute', right: 65, top: 75}}/>
         <Text style={styles.unitMedicion}>BRM</Text>
       </View>
       <Text style={styles.dataPromedio}>Promedio 71</Text>
-      <TouchableOpacity style={styles.startButton}>
+      <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate("ResultScreen")}>
               <Text style={styles.startButtonText}>Comenzar</Text>
       </TouchableOpacity>
     </View>
