@@ -39,7 +39,7 @@ export const requestAndroid31Permissions = async () => {
 
       // Si todos los permisos son concedidos
 
-      alert("Permisos Bluetooth concedidos");
+      // alert("Permisos Bluetooth concedidos");
       return true;
     }
   } catch (error) {

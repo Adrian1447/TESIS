@@ -14,12 +14,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useBluetooth } from "@/context/BluetoothContext"; // Importar el hook del contexto
 import { requestBluetoothPermission } from "@/utils/permissionsUtils";
+import { useBluetoothPermissions } from "@/hooks/useBluetoothPermissions";
 
 type TProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
 export default function PrincipalScreen({ navigation }: TProps) {
+  const isPermissionsGranted = useBluetoothPermissions(); // Usamos el hook de permisos Bluetooth
   const {
     isScanningBLC,
     devicesBLC,
@@ -32,12 +34,21 @@ export default function PrincipalScreen({ navigation }: TProps) {
   } = useBluetooth(); // Usamos el contexto Bluetooth
 
   const width = Dimensions.get("window").width;
+  console.log("isPermissionsGranted", isPermissionsGranted);
   console.log("messageState", messageState);
   console.log("data", data);
 
+  if (isPermissionsGranted) { // Si los permisos son concedidos
+    alert("Permisos concedidos");
+  }
+
+  if (!isPermissionsGranted) {
+    return <Text>No tienes permisos</Text>;
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={requestBluetoothPermission}
         style={styles.appButtonContainer}
       >
@@ -46,7 +57,7 @@ export default function PrincipalScreen({ navigation }: TProps) {
         >
           Solicitar permisos Bluetooth
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}>
         {messageState}
       </Text>
