@@ -12,6 +12,7 @@ import {
   ToastAndroid,
   View,
   Dimensions,
+  Linking,
 } from "react-native";
 import RNBluetoothClassic, {
   BluetoothDevice,
@@ -19,95 +20,73 @@ import RNBluetoothClassic, {
 } from "react-native-bluetooth-classic";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { StackNavigationProp } from "@react-navigation/stack";
-// import { PERMISSIONS, RESULTS, check, request } from "react-native-permissions";
+import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import * as Device from "expo-device";
 
-const requestAccessFineLocationPermission = async () => {
+const handlePermissionDenied = () => {
+  Alert.alert(
+    "Permiso bloqueado",
+    "Uno o más permisos fueron denegados. Para continuar, habilita los permisos manualmente en la configuración.",
+    [
+      { text: "Abrir configuración", onPress: () => Linking.openSettings() },
+      { text: "Cancelar", style: "cancel" },
+    ]
+  );
+};
+
+const requestAndroid31Permissions = async () => {
   try {
-    // Verifica si la plataforma es Android (esto no es necesario en iOS)
     if (Platform.OS === "android") {
-      const granted = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-      ]);
-      console.log("Granted:", granted);
-
-      // Revisa los resultados para cada permiso
-      const permissionsGranted =
-        granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] ===
-          PermissionsAndroid.RESULTS.GRANTED;
-
-      if (permissionsGranted) {
-        console.log("All permissions granted");
-      } else {
-        console.log("One or more permissions denied");
-        Alert.alert("Permiso denegado", "One or more permissions denied");
+      // Solicitar BLUETOOTH_SCAN
+      const scanPermission = await request(PERMISSIONS.ANDROID.BLUETOOTH_SCAN);
+      if (scanPermission !== RESULTS.GRANTED) {
+        return handlePermissionDenied();
       }
-    } else {
-      console.log("Platform is not Android, no permissions needed");
-    }
-  } catch (err) {
-    console.error("Error while requesting permissions:", err);
-  }
 
-  // const granted = await PermissionsAndroid.request(
-  //   PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-  //   {
-  //     title: "Access fine location required for discovery",
-  //     message:
-  //       "In order to perform discovery, you must enable/allow " +
-  //       "fine location access.",
-  //     buttonNeutral: "Ask Me Later",
-  //     buttonNegative: "Cancel",
-  //     buttonPositive: "OK",
-  //   }
-  // );
-  // return granted === PermissionsAndroid.RESULTS.GRANTED;
+      // Solicitar BLUETOOTH_CONNECT
+      const connectPermission = await request(
+        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT
+      );
+      if (connectPermission !== RESULTS.GRANTED) {
+        return handlePermissionDenied();
+      }
+
+      // Solicitar ACCESS_FINE_LOCATION
+      const locationPermission = await request(
+        PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+      );
+      if (locationPermission !== RESULTS.GRANTED) {
+        return handlePermissionDenied();
+      }
+
+      // Si todos los permisos son concedidos
+      alert("Permisos Bluetooth concedidos");
+    }
+  } catch (error) {
+    console.error("Error solicitando permisos Bluetooth:", error);
+  }
 };
 
 const requestBluetoothPermission = async () => {
-  if (Platform.OS === "ios") {
-    return true;
-  }
-  if (
-    Platform.OS === "android" &&
-    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-  ) {
-    const apiLevel = parseInt(Platform.Version.toString(), 10);
-
-    if (apiLevel < 31) {
+  if (Platform.OS === "android") {
+    if ((Device.platformApiLevel ?? -1) < 31) {
       const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Location Permission",
+          message: "Bluetooth requires Location",
+          buttonPositive: "OK",
+        }
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
-    }
-    if (
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN &&
-      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
-    ) {
-      const result = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      ]);
+    } else {
+      const isAndroid31PermissionsGranted = await requestAndroid31Permissions();
 
-      return (
-        result["android.permission.BLUETOOTH_CONNECT"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        result["android.permission.BLUETOOTH_SCAN"] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        result["android.permission.ACCESS_FINE_LOCATION"] ===
-          PermissionsAndroid.RESULTS.GRANTED
-      );
+      return isAndroid31PermissionsGranted;
     }
+  } else {
+    return true;
   }
-  // this.showErrorToast("Permission have not been granted");
-
-  return false;
 };
 
 type TProps = {
@@ -229,13 +208,13 @@ export default function PrincipalScreen({ navigation }: TProps) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={requestAccessFineLocationPermission}
+        onPress={requestBluetoothPermission}
         style={styles.appButtonContainer}
       >
         <Text
           style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}
         >
-          Request Permissions
+          Solicitar permisos Bluetooth
         </Text>
       </TouchableOpacity>
       <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}>
