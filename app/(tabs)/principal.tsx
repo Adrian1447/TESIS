@@ -120,10 +120,10 @@ export default function PrincipalScreen({ navigation }: TProps) {
   const startScanBLC = async () => {
     try {
       setDevicesBLC([]);
-      const granted = await requestBluetoothPermission();
-      if (!granted) {
-        throw new Error("Access fine location was not granted");
-      }
+      // const granted = await requestBluetoothPermission();
+      // if (!granted) {
+      //   throw new Error("Access fine location was not granted");
+      // }
       setIsScanningBLC(true);
       try {
         const unpairedDevices = await RNBluetoothClassic.startDiscovery();
