@@ -17,7 +17,7 @@ export const BluetoothProvider = ({
     useState<boolean>(false);
   const [devicesBLC, setDevicesBLC] = useState<BluetoothDevice[]>([]);
   const [isScanningBLC, setIsScanningBLC] = useState<boolean>(false);
-  const [data, setData] = useState<any[]>([]); // Cambiamos a array para almacenar múltiples entradas de datos
+  const [data, setData] = useState<string>(""); // Cambiamos a array para almacenar múltiples entradas de datos
   const [messageState, setMessageState] = useState<string>("");
   const [deviceSubscription, setDeviceSubscription] =
     useState<BluetoothEventSubscription | null>(null); // Para manejar la suscripción a datos
@@ -73,7 +73,7 @@ export const BluetoothProvider = ({
           console.log(`Datos recibidos de ${device.name}:`, receivedData);
 
           // Actualizar el estado `data` con los datos recibidos
-          setData((prevData) => [...prevData, receivedData]);
+          setData(receivedData);
         });
 
         // Guardar la suscripción para cancelarla más tarde si es necesario
