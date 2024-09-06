@@ -149,7 +149,7 @@ export const BluetoothProvider = ({
       // Escuchar los datos entrantes
       device.onDataReceived((event) => {
         const receivedData = event.data;
-        console.log("Datos recibidos:", receivedData);
+        // console.log("Datos recibidos:", receivedData);
         setData(receivedData); // Almacena los datos recibidos
       });
     }
