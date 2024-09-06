@@ -38,9 +38,9 @@ export default function PrincipalScreen({ navigation }: TProps) {
   console.log("messageState", messageState);
   console.log("data", data);
 
-  if (isPermissionsGranted) { // Si los permisos son concedidos
-    alert("Permisos concedidos");
-  }
+  // if (isPermissionsGranted) { // Si los permisos son concedidos
+  //   alert("Permisos concedidos");
+  // }
 
   if (!isPermissionsGranted) {
     return <Text>No tienes permisos</Text>;
