@@ -24,7 +24,7 @@ const ResultScreen = () => {
             source={require("@/assets/images/heart.png")}
             style={{ width: 55, height: 55, right: 55, top: 10 }}
           />
-          {/* <Text style={styles.bpm}>${message}</Text> */}
+          <Text style={styles.bpm}></Text>
           <Text style={styles.subBpm}>BPM</Text>
           <View style={styles.heartRateInfo}>
             <Text style={[styles.heartRateRange, { color: "#FFCC00" }]}>

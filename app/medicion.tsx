@@ -9,8 +9,8 @@ type TProps = {
 
 const Medicion = ({ navigation }: TProps) => {
   const {
-    message,
-    data
+    data,
+    connectToHC06Device
   } = useBluetooth(); 
   return (
     <View style={styles.appContainer}>
@@ -35,7 +35,7 @@ const Medicion = ({ navigation }: TProps) => {
       <Text style={styles.dataPromedio}>Promedio 71</Text>
       <TouchableOpacity
         style={styles.startButton}
-        onPress={() => navigation.navigate("ResultScreen")}
+        onPress={connectToHC06Device}
       >
         <Text style={styles.startButtonText}>Comenzar</Text>
       </TouchableOpacity>
