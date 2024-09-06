@@ -1,12 +1,17 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"; // You can replace this with any icon library you use
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useBluetooth } from "@/context/BluetoothContext";
 
 type TProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
 const Medicion = ({ navigation }: TProps) => {
+  const {
+    message,
+    data
+  } = useBluetooth(); 
   return (
     <View style={styles.appContainer}>
       <View style={styles.dataContainerMedicion}>
@@ -14,7 +19,7 @@ const Medicion = ({ navigation }: TProps) => {
           source={require("@/assets/images/CircleMonitor2.png")}
           style={{ width: 250, height: 250, bottom: 10 }}
         />
-        {/* <Text style={styles.dataMedicion}>${message}</Text> */}
+        <Text style={styles.dataMedicion}>{data}</Text>
         <Image
           source={require("@/assets/images/red-heart.jpg")}
           style={{
