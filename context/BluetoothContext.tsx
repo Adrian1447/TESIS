@@ -98,6 +98,63 @@ export const BluetoothProvider = ({
     }
   };
 
+  const connectToHC06 = async () => {
+    try {
+      // Verifica si el Bluetooth está habilitado
+      const isBluetoothEnabled = await RNBluetoothClassic.isBluetoothEnabled();
+      if (!isBluetoothEnabled) {
+        console.log(
+          "Bluetooth está deshabilitado. Habilita el Bluetooth para continuar."
+        );
+        return;
+      }
+
+      // Inicia la búsqueda de dispositivos
+      console.log("Iniciando la búsqueda de dispositivos...");
+      const unpairedDevices = await RNBluetoothClassic.startDiscovery();
+
+      // Busca el dispositivo llamado 'HC-06'
+      const hc06Device = unpairedDevices.find(
+        (device: BluetoothDevice) => device.name === "HC-06"
+      );
+
+      if (!hc06Device) {
+        console.log("No se encontró el dispositivo HC-06.");
+        return;
+      }
+
+      // Detiene la búsqueda
+      await RNBluetoothClassic.cancelDiscovery();
+      console.log("Dispositivo HC-06 encontrado. Conectando...");
+
+      // Conecta al dispositivo
+      const isConnected = await hc06Device.connect();
+      if (isConnected) {
+        console.log("Conectado exitosamente al dispositivo HC-06");
+        return hc06Device; // Retorna el dispositivo conectado
+      } else {
+        console.log("No se pudo conectar al dispositivo HC-06.");
+      }
+    } catch (error) {
+      console.error("Error durante la conexión al dispositivo HC-06:", error);
+    }
+  };
+
+  // Función para conectar automáticamente al dispositivo HC-06
+  const connectToHC06Device = async () => {
+    const device = await connectToHC06();
+    if (device) {
+      // setConnectedDevice(device);
+      setMessageState(`Conectado a ${device.name}`);
+      // Escuchar los datos entrantes
+      device.onDataReceived((event) => {
+        const receivedData = event.data;
+        console.log("Datos recibidos:", receivedData);
+        setData(receivedData); // Almacena los datos recibidos
+      });
+    }
+  };
+
   return (
     <BluetoothContext.Provider
       value={{
@@ -109,7 +166,8 @@ export const BluetoothProvider = ({
         startScanBLC,
         stopScanBLC,
         connectToDeviceBLC,
-        disconnectDeviceBLC, // Nueva función para desconectar
+        disconnectDeviceBLC,
+        connectToHC06Device,
       }}
     >
       {children}
