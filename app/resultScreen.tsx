@@ -1,66 +1,109 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Image,
+  Modal,
+  Button,
 } from "react-native";
 
 const ResultScreen = () => {
+  const [bpm, setBpm] = useState<number | null>(80); // Valor inicial de BPM
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTechnique, setSelectedTechnique] = useState<string | null>(null); // Estado para técnica seleccionada
+  const [selectedMood, setSelectedMood] = useState<string | null>(null); // Estado para el estado de ánimo seleccionado
+
+  // Función para determinar recomendaciones según el BPM
+  const getRecommendations = () => {
+    if (bpm === null) return "N/A"; // Validar que bpm no sea null
+    if (bpm < 60) {
+      return "Te recomendamos descansar y consultar con un médico si te sientes débil o mareado.";
+    } else if (bpm >= 60 && bpm < 100) {
+      return "Tu frecuencia cardíaca está en un rango saludable. Mantén un estilo de vida activo y balanceado.";
+    } else if (bpm >= 100 && bpm < 140) {
+      return "Considera realizar ejercicios de respiración profunda o técnicas de relajación. Evita el estrés excesivo.";
+    } else {
+      return "Tu frecuencia cardíaca está alta. Te sugerimos reducir la actividad física intensa y consultar con un médico.";
+    }
+  };
+
+  // Función para obtener la descripción de cada técnica de autocuidado
+  const getSelfCareDescription = (technique: string) => {
+    switch (technique) {
+      case "Caminar":
+        return "Mantén una postura erguida, distribuye tu peso en ambos pies, y evita permanecer de pie por largos periodos.";
+      case "Estirarse":
+        return "Realiza estiramientos suaves para mejorar la flexibilidad, como estirar los brazos sobre la cabeza.";
+      case "Descansar":
+        return "Descansa en una posición cómoda, preferiblemente recostado con las piernas elevadas.";
+      case "Ejercicio":
+        return "Realiza ejercicios ligeros como caminar o nadar, ideal para fortalecer músculos.";
+      default:
+        return "";
+    }
+  };
+
+  // Función para abrir el modal y establecer la técnica seleccionada
+  const openModal = (technique: string) => {
+    setSelectedTechnique(technique);
+    setModalVisible(true);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Pantalla de</Text>
       <Text style={styles.title}>Resultado</Text>
       <Text style={styles.date}>Setiembre 1, 2024 06:12pm</Text>
       <View style={styles.containerResult}>
-        <Image
-          source={require("@/assets/images/RectangleResultScreen.png")}
-          style={{ width: 320 }}
-        />
         <View style={styles.heartRateContainer}>
-          <Image
-            source={require("@/assets/images/heart.png")}
-            style={{ width: 55, height: 55, right: 55, top: 10 }}
-          />
-          <Text style={styles.bpm}></Text>
+          {bpm !== null ? (
+            <Text style={styles.bpm}>{bpm}</Text>
+          ) : (
+            <Text style={styles.bpm}>N/A</Text>
+          )}
           <Text style={styles.subBpm}>BPM</Text>
           <View style={styles.heartRateInfo}>
-            <Text style={[styles.heartRateRange, { color: "#FFCC00" }]}>
-              60
-            </Text>
-            <Text style={[styles.heartRateRange, { color: "#00FF7F" }]}>
-              102
-            </Text>
-            <Text style={[styles.heartRateRange, { color: "#FF6347" }]}>
-              142
-            </Text>
-            <Text style={[styles.heartRateRange, { color: "#FF4500" }]}>
-              183
-            </Text>
-            <Text style={[styles.heartRateRange, { color: "#DC143C" }]}>
-              220
-            </Text>
+            <Text style={[styles.heartRateRange, { color: "#FFCC00" }]}>60</Text>
+            <Text style={[styles.heartRateRange, { color: "#00FF7F" }]}>102</Text>
+            <Text style={[styles.heartRateRange, { color: "#FF6347" }]}>142</Text>
+            <Text style={[styles.heartRateRange, { color: "#FF4500" }]}>183</Text>
+            <Text style={[styles.heartRateRange, { color: "#DC143C" }]}>220</Text>
           </View>
         </View>
       </View>
       <View style={styles.separator} />
+
+      {/* Recomendaciones basadas en BPM */}
       <Text style={styles.sectionTitle}>Recomendaciones</Text>
+      <Text style={styles.recommendationText}>{getRecommendations()}</Text>
+
+      {/* Botones para abrir el modal */}
       <View style={styles.statusContainer}>
-        {["Standing", "Stretching", "Resting", "Exercise"].map(
-          (status, index) => (
-            <TouchableOpacity key={index} style={styles.statusButton}>
-              <Text style={styles.statusText}>{status}</Text>
-            </TouchableOpacity>
-          )
-        )}
+        {["Caminar", "Estirarse", "Descansar", "Ejercicio"].map((status, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.statusButton}
+            onPress={() => openModal(status)}
+          >
+            <Text style={styles.statusText}>{status}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
+
       <View style={styles.separator} />
-      <Text style={styles.sectionTitle}>How are you feeling today?</Text>
+      <Text style={styles.sectionTitle}>¿Cómo te sientes hoy?</Text>
       <View style={styles.moodContainer}>
-        {["Excellent", "Good", "Angry", "In Love"].map((mood, index) => (
-          <TouchableOpacity key={index} style={styles.moodButton}>
+        {["Excelente", "Bien", "Enojado", "Enamorado"].map((mood, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.moodButton,
+              selectedMood === mood && styles.selectedMoodButton, // Aplicar estilo cuando está seleccionado
+            ]}
+            onPress={() => setSelectedMood(mood)} // Establecer el estado de ánimo seleccionado
+          >
             <Text style={styles.moodText}>{mood}</Text>
           </TouchableOpacity>
         ))}
@@ -74,6 +117,24 @@ const ResultScreen = () => {
           <Text style={styles.saveText}>Guardar</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal para mostrar la técnica seleccionada */}
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{selectedTechnique}</Text>
+            <Text style={styles.modalDescription}>
+              {selectedTechnique ? getSelfCareDescription(selectedTechnique) : ""}
+            </Text>
+            <Button title="Cerrar" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -99,32 +160,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   heartRateContainer: {
-    flex: 2,
-    top: 20,
-    position: "absolute",
     alignItems: "center",
     marginBottom: 20,
   },
-  bpmContainer: {},
   bpm: {
-    position: "absolute",
     textAlign: "center",
     fontSize: 50,
     color: "#FFFFFF",
   },
   subBpm: {
-    top: 33,
-    right: 83,
-    position: "absolute",
     fontSize: 18,
     color: "#8a8c8e",
   },
   heartRateInfo: {
-    top: 50,
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     width: "95%",
-    marginTop: 10,
   },
   heartRateRange: {
     fontSize: 12,
@@ -136,6 +188,13 @@ const styles = StyleSheet.create({
     color: "#A4A4A4",
     textAlign: "center",
     marginBottom: 20,
+  },
+  recommendationText: {
+    fontSize: 14,
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
   statusContainer: {
     flexDirection: "row",
@@ -166,6 +225,9 @@ const styles = StyleSheet.create({
   moodText: {
     fontSize: 14,
     color: "#FFFFFF",
+  },
+  selectedMoodButton: {
+    backgroundColor: "#4A90E2", // Color del botón cuando está seleccionado
   },
   buttonContainer: {
     flexDirection: "row",
@@ -199,6 +261,30 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#272a2e",
     marginVertical: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo semitransparente
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalDescription: {
+    fontSize: 16,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
   },
 });
 

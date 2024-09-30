@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
 import { StackNavigationProp } from "@react-navigation/stack";
 
 type TProps = {
@@ -7,6 +7,19 @@ type TProps = {
 };
 
 const LoginScreen = ({ navigation }: TProps) => {
+  const [dni, setDNI] = useState('');
+
+  const handleLogin = () => {
+    // Aquí debes verificar si el DNI está registrado (por ejemplo, en Firebase o local storage)
+    if (dni.length === 8) {
+      // Simular que verificamos si el DNI está registrado
+      console.log('Iniciando sesión con DNI:', dni);
+      navigation.navigate("DashboardScreen");
+    } else {
+      Alert.alert('Error', 'Debe ingresar un DNI válido de 8 dígitos.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -23,17 +36,18 @@ const LoginScreen = ({ navigation }: TProps) => {
         style={styles.input}
         keyboardType="numeric" // Teclado numérico
         maxLength={8}
+        onChangeText={setDNI}
       />
       <TouchableOpacity 
         style={styles.loginButton} 
-        onPress={() => navigation.navigate("Principal")}
+        onPress={() => navigation.navigate("DashboardScreen")}
       >
         <Text style={styles.loginButtonText}>Ingresar</Text>
       </TouchableOpacity>
       <View style={styles.signUpContainer}>
-        <Text style={styles.noAccountText}>Don’t have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("")}>
-          <Text style={styles.signUpText}>Sign Up</Text>
+        <Text style={styles.noAccountText}>¿No tiene un cuenta?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
+          <Text style={styles.signUpText}>Registrate!</Text>
         </TouchableOpacity>
       </View>
     </View>

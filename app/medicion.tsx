@@ -39,11 +39,29 @@ const Medicion = ({ navigation }: TProps) => {
       >
         <Text style={styles.startButtonText}>Comenzar</Text>
       </TouchableOpacity>
+      <TouchableOpacity 
+        style={styles.loginButton} 
+        onPress={() => navigation.navigate("ResultScreen")}
+      >
+        <Text style={styles.loginButtonText}>siguiente</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loginButton: {
+    backgroundColor: '#E53E3E',
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 25,
+    marginBottom: 20,
+  },
   appContainer: {
     flex: 1,
     justifyContent: "center",
