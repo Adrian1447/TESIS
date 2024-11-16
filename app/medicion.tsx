@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"; // You can replace this with any icon library you use
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native"; 
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useBluetooth } from "@/context/BluetoothContext";
 
@@ -30,7 +30,7 @@ const Medicion = ({ navigation }: TProps) => {
             top: 75,
           }}
         />
-        <Text style={styles.unitMedicion}>BRM</Text>
+        <Text style={styles.unitMedicion}>BPM</Text>
       </View>
       <Text style={styles.dataPromedio}>Promedio 71</Text>
       <TouchableOpacity
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   dataPromedio: {
-    bottom: 310,
+    bottom: 380,
     left: 125,
     position: "absolute",
     fontSize: 20,

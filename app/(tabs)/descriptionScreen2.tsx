@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000',
+    padding: 10
   },
   image: {
     width: 200,
@@ -38,17 +39,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#ccc',
     marginHorizontal: 20,
-  },
-  button: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#6200EE',
-    borderRadius: 25,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
   },
 });
 

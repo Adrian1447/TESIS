@@ -14,7 +14,7 @@ type TProps = {
 
 
 const DataMonitor2 = ({ navigation }: TProps) => {
-    const [presion, setPresion] = useState('65');
+    const [presion, setPresion] = useState('120');
     const [colestrol, setColesterol] = useState('150');
     const [glucosa, setGlucosa] = useState('100');
   return (
@@ -32,7 +32,7 @@ const DataMonitor2 = ({ navigation }: TProps) => {
                 textAlign="center"
             />
             <Image source={require('@/assets/images/1142147.png')} style={{width: 30, height: 30, position: 'absolute', right: 35, top: 80}}/>
-            <Text style={styles.unitPresionArterial}>Hg</Text>
+            <Text style={styles.unitPresionArterial}>/80 mmHg</Text>
         </View>
         {/* COLESTEROL */}
         <View style={styles.dataContainerColesterol}>
@@ -94,10 +94,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dataPresionArterial: {
-    top: 60,
+    top: 70,
     left: 30,
     position: 'absolute',
-    fontSize: 60,
+    fontSize: 40,
     color: '#000',
     fontWeight: 'bold',
   },

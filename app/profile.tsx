@@ -37,7 +37,10 @@ const ProfileScreen = ({ navigation }: TProps) => {
         <Text style={styles.backButtonText}>{"<"}</Text>
       </TouchableOpacity>
 
-      {/* Avatar and Edit Icon */}
+      {/* Título del perfil */}
+      <Text style={styles.profileTitle}>Perfil</Text>
+
+      {/* Avatar y ícono de edición */}
       <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
@@ -113,6 +116,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#333',
   },
+  profileTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#333',
+  },
   avatarContainer: {
     alignItems: 'center',
     marginBottom: 30,
@@ -185,7 +195,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: 20,
-    backgroundColor: '#4A90E2',
+    backgroundColor: '#E53E3E',
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,

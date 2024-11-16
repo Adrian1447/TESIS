@@ -1,7 +1,7 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import {
-  Button,
+  TouchableOpacity,
   Image,
   StyleSheet,
   Text,
@@ -26,10 +26,10 @@ function DescriptionScreen3({ navigation }: TProps) {
       {/*<TouchableOpacity style={styles.button} onPress={() => navigation.navigate('principal')}>
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity> */}
-      <Button
-        title="Get Started"
-        onPress={() => navigation.navigate("DashboardScreen")}
-      />
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("DashboardScreen")}>
+        
+        <Text style={styles.buttonText}>Comencemos</Text>
+       </TouchableOpacity>
     </View>
   );
 }
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000",
+    padding: 10
   },
   image: {
     width: 200,
@@ -62,13 +63,14 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 20,
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#6200EE",
-    borderRadius: 25,
+    paddingHorizontal: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
   },
   buttonText: {
-    color: "white",
-    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
 

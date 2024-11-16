@@ -13,7 +13,7 @@ const DataMonitor = ({ navigation }: TProps) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('@/assets/images/RectangleDataMonitor.png')} />
+      <Image source={require('@/assets/images/RectangleDataMonitor.png')} style={{bottom: 5}}/>
       <View style={styles.subContainer}>
         <Text style={styles.header}>Hola!</Text>
         <Text style={styles.subHeader}>Empecemos con datos que son necesarios para el monitoreo.</Text>

@@ -7,6 +7,7 @@ import {
   ScrollView,
   Modal,
   Button,
+  Image,
 } from "react-native";
 
 const ResultScreen = () => {
@@ -64,6 +65,10 @@ const ResultScreen = () => {
             <Text style={styles.bpm}>N/A</Text>
           )}
           <Text style={styles.subBpm}>BPM</Text>
+
+          {/* Imagen de la barra de colores */}
+          <Image source={require('@/assets/images/Medidas.png')} style={styles.bar} />
+
           <View style={styles.heartRateInfo}>
             <Text style={[styles.heartRateRange, { color: "#FFCC00" }]}>60</Text>
             <Text style={[styles.heartRateRange, { color: "#00FF7F" }]}>102</Text>
@@ -171,6 +176,10 @@ const styles = StyleSheet.create({
   subBpm: {
     fontSize: 18,
     color: "#8a8c8e",
+  },
+  bar: {
+    height: 20,
+    resizeMode: 'contain',
   },
   heartRateInfo: {
     marginTop: 10,

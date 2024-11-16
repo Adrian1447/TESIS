@@ -15,12 +15,15 @@ import ProfileScreen from "./profile";
 import EditProfileScreen from "./editaProfile";
 import UltimosResultados from "./ultimos_resultados";
 import UltimasComparativa from "./ultimas_comparativas";
+import { BluetoothProvider } from "@/context/BluetoothContext";
 
 const Stack = createStackNavigator();
 
 export default function HomeScreen() {
   return (
+
     <NavigationContainer independent={true}>
+      <BluetoothProvider>
       <Stack.Navigator
         initialRouteName="Onboarding"
         screenOptions={{ headerShown: false }}
@@ -92,6 +95,7 @@ export default function HomeScreen() {
         />
         {/* Agrega otras pantallas aquí */}
       </Stack.Navigator>
+      </BluetoothProvider>
     </NavigationContainer>
   );
 }

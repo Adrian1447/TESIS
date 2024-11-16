@@ -83,8 +83,8 @@ export default function DashboardScreen({ navigation }: TProps) {
       <View style={sharedStyles.measurements}>
         <View style={currentStyles.measurementItemPressure}>
           <Image source={require('@/assets/images/estetoscopio.png')} style={currentStyles.estetoscopio} />
-          <Text style={currentStyles.measurementLabel}>Presión del Corazón</Text>
-          <Text style={currentStyles.measurementValue}>123 / 80</Text>
+          <Text style={currentStyles.measurementLabel}>Presión Arterial</Text>
+          <Text style={currentStyles.measurementValue}>123 / 80 mmHg</Text>
         </View>
         <View style={currentStyles.measurementItemRhythm}>
           <Image source={require('@/assets/images/music-rhythm.jpg')} style={currentStyles.estetoscopio} />
@@ -129,8 +129,10 @@ const sharedStyles = StyleSheet.create({
     alignItems: 'center',
   },
   measurements: {
+    paddingTop: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingBottom: 15
   },
   doctorActions: {
     flexDirection: 'row',
