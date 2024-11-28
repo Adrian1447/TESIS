@@ -40,7 +40,7 @@ export default function DashboardScreen({ navigation }: TProps) {
           <TouchableOpacity onPress={toggleDarkMode} style={currentStyles.darkModeIcon}>
             {isDarkMode ? (
               <Image
-                source={require('@/assets/images/brightness-contrast.png')} // Cambia por la ruta de tu imagen para el modo oscuro
+                source={require('@/assets/images/brightness-contrast.png')} // Modo oscuro
                 style={[
                   currentStyles.darkModeImage,
                   { tintColor: isDarkMode ? '#FFFFFF' : '#000000' }, // Cambia el color según el modo
@@ -48,7 +48,7 @@ export default function DashboardScreen({ navigation }: TProps) {
               />
             ) : (
               <Image
-                source={require('@/assets/images/dark-theme.png')} // Cambia por la ruta de tu imagen para el modo claro
+                source={require('@/assets/images/dark-theme.png')} // Modo claro
                 style={currentStyles.darkModeImage} // Usa el mismo estilo para ambas imágenes
               />
             )}

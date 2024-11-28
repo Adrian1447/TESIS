@@ -28,7 +28,7 @@ const DataMonitor2 = ({ navigation }: TProps) => {
                 value={presion}
                 onChangeText={setPresion}
                 keyboardType="numeric" // Teclado numérico
-                maxLength={3} // Limita la edad a 3 dígitos
+                maxLength={3} // Limita la presion a 3 dígitos
                 textAlign="center"
             />
             <Image source={require('@/assets/images/1142147.png')} style={{width: 30, height: 30, position: 'absolute', right: 35, top: 80}}/>
@@ -43,7 +43,7 @@ const DataMonitor2 = ({ navigation }: TProps) => {
                 value={colestrol}
                 onChangeText={setColesterol}
                 keyboardType="numeric" // Teclado numérico
-                maxLength={3} // Limita la edad a 3 dígitos
+                maxLength={3} // Limita el colesterol a 3 dígitos
                 textAlign="center"
             />
             <Image source={require('@/assets/images/6192010.png')} style={{width: 30, height: 30, position: 'absolute', right: 35, top: 85}}/>
@@ -58,7 +58,7 @@ const DataMonitor2 = ({ navigation }: TProps) => {
                 value={glucosa}
                 onChangeText={setGlucosa}
                 keyboardType="numeric" // Teclado numérico
-                maxLength={3} // Limita la edad a 3 dígitos
+                maxLength={3} // Limita la glucosa a 3 dígitos
                 textAlign="center"
             />
             <Image source={require('@/assets/images/6192150.png')} style={{width: 30, height: 30, position: 'absolute', right: 35, top: 85}}/>

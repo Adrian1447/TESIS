@@ -26,11 +26,11 @@ const EditProfileScreen = ({navigation }: TProps) => {
         <Text style={styles.backButtonText}>{"<"}</Text>
       </TouchableOpacity>
 
-      {/* Avatar and Edit Icon */}
+      {/* Avatar y Edit Icon */}
       <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
-          source={require('@/assets/images/mayor_señor.png')} // Aquí deberías poner la URL real o el path a la imagen
+          source={require('@/assets/images/mayor_señor.png')}
         />
       </View>
 

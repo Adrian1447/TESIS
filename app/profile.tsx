@@ -44,12 +44,12 @@ const ProfileScreen = ({ navigation }: TProps) => {
       <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
-          source={require('@/assets/images/mayor_señor.png')} // Aquí deberías poner la URL real o el path a la imagen
+          source={require('@/assets/images/mayor_señor.png')}
         />
         <TouchableOpacity style={styles.editIcon} onPress={() => navigation.navigate("EditProfileScreen")}>
           <Image
             style={styles.sizeIcon}
-            source={require('@/assets/images/pencilblack.png')} // Aquí deberías poner la URL real o el path a la imagen
+            source={require('@/assets/images/pencilblack.png')}
           />
         </TouchableOpacity>
       </View>

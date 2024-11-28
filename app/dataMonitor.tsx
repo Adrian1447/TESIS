@@ -42,7 +42,7 @@ const DataMonitor = ({ navigation }: TProps) => {
           value={weight}
           onChangeText={setWeight}
           keyboardType="numeric" // Teclado numérico
-          maxLength={3} // Limita la edad a 3 dígitos
+          maxLength={3} // Limita el peso a 3 dígitos
           textAlign="center"
           />
            <Image source={require('@/assets/images/1712070-200.png')} style={{width: 40, height: 40, position: 'absolute', right: 50, top: 63}}/>

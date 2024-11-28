@@ -14,7 +14,7 @@ const HeartRateMonitor = ({ navigation }: TProps) => {
         <Text style={styles.title}>Mide tu Frecuencia Cardiaca</Text>
       </View>
       <Image 
-        source={require('@/assets/images/heart-beat-5665510-4788941.jpg')} // assuming you have a heart image in assets
+        source={require('@/assets/images/heart-beat-5665510-4788941.jpg')}
         style={styles.heartImage}
       />
       <View style={styles.heartRateContainer}>
