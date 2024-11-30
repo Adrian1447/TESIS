@@ -17,6 +17,7 @@ import UltimosResultados from "./ultimos_resultados";
 import UltimasComparativa from "./ultimas_comparativas";
 import { BluetoothProvider } from "@/context/BluetoothContext";
 
+
 const Stack = createStackNavigator();
 
 export default function HomeScreen() {
