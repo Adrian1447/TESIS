@@ -117,6 +117,17 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
+    plugins {
+    // ...
+    id 'com.android.application'
+    // Add the Google services Gradle plugin
+     id 'com.google.gms.google-services'
+
+
+    // Add the dependency for the Google services Gradle plugin
+    id 'com.google.gms.google-services' version '4.4.2' apply false
+
+    }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -169,6 +180,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation platform('com.google.firebase:firebase-bom:33.6.0')
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
