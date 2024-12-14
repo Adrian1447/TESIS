@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import firestore from '@react-native-firebase/firestore';
+import { useState, useEffect } from "react";
+import { doc, collection, addDoc, getFirestore } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 interface HealthData {
   presionCardiaca: string | null;
@@ -14,7 +15,7 @@ export const useHealthData = (userId: string | null) => {
 
   // Simular la obtención del valor desde el módulo AD8232
   const readPresionCardiaca = async (): Promise<string> => {
-    //Lógica para leer del módulo AD8232
+    // Lógica para leer del módulo AD8232
     const simulatedValue = `${Math.floor(Math.random() * 40) + 60}`; // Simulación de valores
     return simulatedValue;
   };
@@ -22,7 +23,7 @@ export const useHealthData = (userId: string | null) => {
   // Guardar el valor de `presionCardiaca` en Firestore
   const savePresionCardiacaToFirestore = async (presionCardiaca: string) => {
     if (!userId) {
-      throw new Error('Usuario no autenticado.');
+      throw new Error("Usuario no autenticado.");
     }
 
     const healthRecord = {
@@ -30,11 +31,16 @@ export const useHealthData = (userId: string | null) => {
       timestamp: new Date(),
     };
 
-    await firestore()
-      .collection('usuarios')
-      .doc(userId)
-      .collection('mediciones')
-      .add(healthRecord);
+    try {
+      // Referencia a la subcolección `mediciones` dentro del documento de usuario
+      const userDocRef = doc(db, "usuarios", userId);
+      const measurementsCollectionRef = collection(userDocRef, "mediciones");
+
+      // Añadir el registro a Firestore
+      await addDoc(measurementsCollectionRef, healthRecord);
+    } catch (error) {
+      console.error("Error al guardar presionCardiaca en Firestore:", error);
+    }
   };
 
   // Leer y actualizar el estado local y Firebase
@@ -49,7 +55,7 @@ export const useHealthData = (userId: string | null) => {
       // Guardar en Firebase
       await savePresionCardiacaToFirestore(presionCardiaca);
     } catch (error) {
-      console.error('Error al actualizar presionCardiaca:', error);
+      console.error("Error al actualizar presionCardiaca:", error);
     }
   };
 
