@@ -11,7 +11,6 @@ const firebaseConfig = {
   storageBucket: "tesis-heartapp01.firebasestorage.app",
   messagingSenderId: "855309946635",
   appId: "1:855309946635:android:9b68f7fd5cf4015d6f1c0e",
-  measurementId: "G-measurement-id",
 };
 
 const app = initializeApp(firebaseConfig);

@@ -31,6 +31,9 @@ const LoginScreen = ({ navigation }: TProps) => {
       Alert.alert("Error", "Debe ingresar un DNI válido y una contraseña.");
     }
   };
+  const handleRegisterNavigation = () => {
+    navigation.navigate("RegisterScreen"); // Redirige a la pantalla de registro
+  };
 
   return (
     <View style={styles.container}>
@@ -51,11 +54,33 @@ const LoginScreen = ({ navigation }: TProps) => {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Ingresar</Text>
       </TouchableOpacity>
+      <View style={styles.registerContainer}>
+        <Text style={styles.registerText}>¿Eres nuevo?</Text>
+        <TouchableOpacity onPress={handleRegisterNavigation}>
+          <Text style={styles.registerButtonText}>Regístrate aquí</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  registerContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+    alignItems: "center",
+  },
+  registerText: {
+    fontSize: 14,
+    color: "#666",
+  },
+  registerButtonText: {
+    fontSize: 14,
+    color: "#007BFF",
+    marginLeft: 5,
+    fontWeight: "bold",
+  },
+
   container: {
     flex: 1,
     justifyContent: "center",

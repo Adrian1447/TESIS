@@ -8,6 +8,7 @@ const RegisterScreen = () => {
 
   const togglePasswordVisibility = () => {
     setPasswordVisibility(!isPasswordVisible);
+    console.log('Estado de visibilidad de contraseña:', !isPasswordVisible);
   };
 
   const handleRegister = () => {
