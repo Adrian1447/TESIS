@@ -1,60 +1,67 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { registerUser } from "@/utils/registerUser";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 
 const RegisterScreen = () => {
-  const [DNI, dni] = useState('');
-  const [password, setPassword] = useState('');
-  const [isPasswordVisible, setPasswordVisibility] = useState(false);
+  const [dni, setDNI] = useState("");
+  const [password, setPassword] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellidos, setApellidos] = useState("");
 
-  const togglePasswordVisibility = () => {
-    setPasswordVisibility(!isPasswordVisible);
-    console.log('Estado de visibilidad de contraseña:', !isPasswordVisible);
-  };
-
-  const handleRegister = () => {
-    // Aquí manejo el registro, por ejemplo enviar los datos a tu backend o Firebase.
-    console.log('Datos registrados:', { DNI });
+  const handleRegister = async () => {
+    if (dni.length === 8 && password && nombre && apellidos) {
+      const response = await registerUser(dni, password, nombre, apellidos);
+      if (response.success) {
+        Alert.alert("Éxito", "Usuario registrado correctamente.");
+      } else {
+        Alert.alert(
+          "Error",
+          response.error || "No se pudo registrar el usuario."
+        );
+      }
+    } else {
+      Alert.alert(
+        "Error",
+        "Por favor completa todos los campos correctamente."
+      );
+    }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.closeButton}>
-        <Text style={styles.closeButtonText}>X</Text>
-      </TouchableOpacity>
-
-      <Image
-        style={styles.icon}
-        source={require('@/assets/images/grandparents.png')}
-      />
-
-      <Text style={styles.title}>REGISTRAR</Text>
-
+      <Text style={styles.title}>Registrar Usuario</Text>
       <TextInput
-        style={styles.input}
         placeholder="DNI"
-        value={DNI}
-        onChangeText={dni}
-        placeholderTextColor="#fff"
-        keyboardType='numeric'
+        style={styles.input}
+        keyboardType="numeric"
         maxLength={8}
+        onChangeText={setDNI}
       />
-
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.inputPassword}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholderTextColor="#fff"
-          secureTextEntry={!isPasswordVisible}
-        />
-        <TouchableOpacity onPress={togglePasswordVisibility}>
-          <Text style={styles.showPasswordText}>{isPasswordVisible ? '🙈' : '👁️'}</Text>
-        </TouchableOpacity>
-      </View>
-
+      <TextInput
+        placeholder="Nombre"
+        style={styles.input}
+        onChangeText={setNombre}
+      />
+      <TextInput
+        placeholder="Apellidos"
+        style={styles.input}
+        onChangeText={setApellidos}
+      />
+      <TextInput
+        placeholder="Contraseña"
+        style={styles.input}
+        secureTextEntry
+        onChangeText={setPassword}
+      />
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>CREAR CUENTA</Text>
+        <Text style={styles.buttonText}>Registrar</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,68 +70,35 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1D1D1D',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    justifyContent: 'center',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 20,
-  },
-  icon: {
-    width: 50,
-    height: 50,
-    alignSelf: 'center',
-    marginBottom: 20,
+    backgroundColor: "#fff",
   },
   title: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#fff',
-    paddingVertical: 10,
-    marginVertical: 10,
-    color: '#fff',
-    fontSize: 16,
-  },passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#fff',
-    marginVertical: 10,
-  },
-  inputPassword: {
-    flex: 1,
-    color: '#fff',
-    paddingVertical: 10,
-    fontSize: 16,
-  },
-  showPasswordText: {
-    color: '#fff',
-    fontSize: 18,
-    paddingRight: 10,
+    width: "100%",
+    height: 50,
+    backgroundColor: "#f5f5f5",
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    marginBottom: 15,
   },
   button: {
-    backgroundColor: '#E53E3E',
-    padding: 15,
-    marginTop: 20,
-    borderRadius: 5,
+    backgroundColor: "#007bff",
+    paddingVertical: 15,
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 10,
   },
   buttonText: {
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

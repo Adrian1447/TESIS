@@ -9,7 +9,7 @@ import DataMonitor2 from "./datMonitor2";
 import Medicion from "./medicion";
 import LoginScreen from "./login";
 import ResultScreen from "./resultScreen";
-import RegisterScreen from "./registerScreen";
+import RegisterScreen from "./registerScreenOld";
 import DashboardScreen from "./dashbord";
 import ProfileScreen from "./profile";
 import EditProfileScreen from "./editaProfile";
